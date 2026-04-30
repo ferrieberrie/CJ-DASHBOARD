@@ -533,9 +533,11 @@ tr:hover { background: rgba(255,255,255,0.8); }
             <thead>
               <tr>
                 <th>Item Name</th>
+                <th>Description</th>
                 <th>Date Added</th>
                 <th>Total Cost (£)</th>
                 <th>Cost / Litre (£)</th>
+                <th>Link</th>
                 <th>Preview</th>
                 <th>Actions</th>
               </tr>
@@ -642,9 +644,11 @@ tr:hover { background: rgba(255,255,255,0.8); }
       <form id="cost-form" onsubmit="saveCost(event)">
         <input type="hidden" id="c-id">
         <div class="field"><label>Item Name *</label><input type="text" id="c-name" required></div>
+        <div class="field"><label>Description (Optional)</label><textarea id="c-desc"></textarea></div>
         <div class="field"><label>Date Purchased *</label><input type="date" id="c-date" required></div>
         <div class="field"><label>Total Cost (£) *</label><input type="number" step="0.01" id="c-cost" required></div>
         <div class="field"><label>Cost per Litre (£) (Optional)</label><input type="number" step="0.01" id="c-litre"></div>
+        <div class="field"><label>Item Link (Optional)</label><input type="url" id="c-link" placeholder="https://..."></div>
         <div class="field"><label>Image URL (Optional)</label><input type="url" id="c-img" placeholder="https://..."></div>
         
         <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -856,9 +860,11 @@ tr:hover { background: rgba(255,255,255,0.8); }
       const costData = {
         id: id ? parseInt(id) : Date.now(),
         name: document.getElementById('c-name').value,
+        desc: document.getElementById('c-desc').value || '',
         date: document.getElementById('c-date').value,
         cost: parseFloat(document.getElementById('c-cost').value) || 0,
         litre: parseFloat(document.getElementById('c-litre').value) || null,
+        link: document.getElementById('c-link').value || '',
         img: document.getElementById('c-img').value || ''
       };
       
@@ -880,9 +886,11 @@ tr:hover { background: rgba(255,255,255,0.8); }
 
         document.getElementById('c-id').value = cost.id;
         document.getElementById('c-name').value = cost.name;
+        document.getElementById('c-desc').value = cost.desc || '';
         document.getElementById('c-date').value = cost.date;
         document.getElementById('c-cost').value = cost.cost;
         document.getElementById('c-litre').value = cost.litre || '';
+        document.getElementById('c-link').value = cost.link || '';
         document.getElementById('c-img').value = cost.img;
 
         document.getElementById('cost-modal-title').innerText = 'Edit Cost';
@@ -895,15 +903,19 @@ tr:hover { background: rgba(255,255,255,0.8); }
 
       costs.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(cost => {
         const imgHTML = cost.img ? `<a href="${cost.img}" target="_blank"><img src="${cost.img}" class="img-preview"></a>` : '<span style="color:#aaa;">No Image</span>';
+        const linkHTML = cost.link ? `<a href="${cost.link}" target="_blank">Click here</a>` : '-';
+        const descHTML = cost.desc ? cost.desc : '-';
         const litreHTML = cost.litre ? `£${cost.litre.toFixed(2)}` : '-';
         const displayDate = cost.date ? new Date(cost.date).toLocaleDateString('en-GB') : '-';
         
         tbody.innerHTML += `
           <tr>
             <td><strong>${cost.name}</strong></td>
+            <td>${descHTML}</td>
             <td>${displayDate}</td>
             <td>£${cost.cost.toFixed(2)}</td>
             <td>${litreHTML}</td>
+            <td>${linkHTML}</td>
             <td>${imgHTML}</td>
             <td>
                 <button class="btn-small btn-edit" onclick="editCost(${cost.id})"><i class="fa-solid fa-pen"></i></button>
