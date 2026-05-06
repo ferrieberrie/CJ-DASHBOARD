@@ -660,100 +660,178 @@ tr:hover { background: rgba(255,255,255,0.8); }
   </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyPksR14X1cad3idTfktb0OW-AGI1O6kVAdPrLNZUqyOtNlB4Y1P_6j3uj6BfBJoal_2A/exec";
+    const SHEETS_API = 'https://script.google.com/macros/s/AKfycbyPksR14X1cad3idTfktb0OW-AGI1O6kVAdPrLNZUqyOtNlB4Y1P_6j3uj6BfBJoal_2A/exec';
 
     // --- DATA STATE ---
     let orders = [];
     let costs = [];
     let methodsData = { way: '', method: '', resources: '' };
+    let syncStatus = 'idle'; // idle | syncing | error
 
-    // --- GOOGLE SHEETS API INTEGRATION ---
-    
-    // Fetch all data from Google Sheets on load/login
-    async function fetchAllData() {
-        try {
-            const response = await fetch(API_URL + "?action=getData");
-            const data = await response.json();
-            
-            // Populate arrays with Google Sheets data
-            if (data.orders) orders = data.orders;
-            if (data.costs) costs = data.costs;
-            
-            // Map the Methods array (type, content) back into the UI object
-            if (data.methodsData) {
-                const mData = data.methodsData;
-                methodsData.way = mData.find(m => m.type === 'way')?.content || '';
-                methodsData.method = mData.find(m => m.type === 'method')?.content || '';
-                methodsData.resources = mData.find(m => m.type === 'resources')?.content || '';
-            }
-            
-            // Re-render UI to reflect fetched data
-            if(!document.getElementById('dashboard').classList.contains('hidden')) {
-                renderOrders();
-                renderCosts();
-                updateDashboardStats();
-                loadMethodsData();
-            }
-        } catch (error) {
-            console.error("Failed to fetch data from Google Sheets:", error);
-        }
+    // --- SYNC HELPERS ---
+    function showSyncIndicator(state, message) {
+      let el = document.getElementById('sync-indicator');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'sync-indicator';
+        el.style.cssText = `
+          position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+          padding: 10px 18px; border-radius: 50px; font-size: 13px;
+          font-weight: 600; font-family: Inter, sans-serif;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+        `;
+        document.body.appendChild(el);
+      }
+      if (state === 'syncing') {
+        el.style.background = '#e0f2fe'; el.style.color = '#0369a1';
+        el.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> Syncing...';
+        el.style.opacity = '1';
+      } else if (state === 'ok') {
+        el.style.background = '#dcfce7'; el.style.color = '#166534';
+        el.innerHTML = '<i class="fa-solid fa-check"></i> ' + (message || 'Saved');
+        el.style.opacity = '1';
+        setTimeout(() => { el.style.opacity = '0'; }, 2500);
+      } else if (state === 'error') {
+        el.style.background = '#fee2e2'; el.style.color = '#991b1b';
+        el.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ' + (message || 'Sync failed');
+        el.style.opacity = '1';
+        setTimeout(() => { el.style.opacity = '0'; }, 4000);
+      } else {
+        el.style.opacity = '0';
+      }
     }
 
-    // Generic function to send payloads to Google Sheets
-    async function pushDataToSheet(action, payload) {
-        try {
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                // The Apps Script should parse this JSON string, read 'action', and write 'data' to the correct sheet.
-                body: JSON.stringify({ action: action, data: payload })
-            });
-        } catch (error) {
-            console.error(`Failed to push ${action} to Google Sheets:`, error);
-        }
+    async function sheetsRequest(payload) {
+      const response = await fetch(SHEETS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      if (result.status !== 'success') throw new Error(result.message || 'Unknown error');
+      return result;
     }
 
-    function saveMethodsData() {
-      methodsData = {
-          way: document.getElementById('cj-way-text').value,
-          method: document.getElementById('cj-method-text').value,
-          resources: document.getElementById('cj-resources-text').value
-      };
-      
-      // Convert back to the requested Sheet format: [type, content]
-      const payload = [
-          { type: 'way', content: methodsData.way },
-          { type: 'method', content: methodsData.method },
+    // --- LOAD ALL DATA FROM SHEETS ---
+    async function loadAllFromSheets() {
+      showSyncIndicator('syncing');
+      try {
+        const res = await fetch(`${SHEETS_API}?action=getAll`);
+        const data = await res.json();
+
+        // Orders: columns = id,name,phone,address,village,service,date,time,cars,status,paid
+        orders = (data.Orders || []).map(row => ({
+          id:      row.id      ? Number(row.id) : Date.now(),
+          name:    row.name    || '',
+          phone:   row.phone   || '',
+          address: row.address || '',
+          village: row.village || '',
+          service: row.service || '',
+          date:    row.date    || '',
+          time:    row.time    || '',
+          cars:    row.cars    || 1,
+          status:  row.status  || 'Confirmation',
+          paid:    row.paid    ? parseFloat(row.paid) : 0,
+          details: row.details || ''
+        }));
+
+        // Costs: columns = id,name,desc,date,cost,litre,link,img
+        costs = (data.Costs || []).map(row => ({
+          id:   row.id   ? Number(row.id) : Date.now(),
+          name: row.name || '',
+          desc: row.desc || '',
+          date: row.date || '',
+          cost: row.cost ? parseFloat(row.cost) : 0,
+          litre: row.litre ? parseFloat(row.litre) : null,
+          link: row.link || '',
+          img:  row.img  || ''
+        }));
+
+        // Methods: columns = type,content
+        const methodRows = data.Methods || [];
+        methodsData = { way: '', method: '', resources: '' };
+        methodRows.forEach(row => {
+          if (row.type === 'way')       methodsData.way       = row.content || '';
+          if (row.type === 'method')    methodsData.method    = row.content || '';
+          if (row.type === 'resources') methodsData.resources = row.content || '';
+        });
+
+        showSyncIndicator('ok', 'Loaded from Sheets');
+        return true;
+      } catch(err) {
+        console.error('Load error:', err);
+        showSyncIndicator('error', 'Could not load data');
+        return false;
+      }
+    }
+
+    // --- SAVE RECORD TO SHEETS ---
+    async function saveOrderToSheets(orderData) {
+      return sheetsRequest({
+        action: 'upsert',
+        sheet: 'Orders',
+        idField: 'id',
+        row: {
+          id:      orderData.id,
+          name:    orderData.name,
+          phone:   orderData.phone,
+          address: orderData.address,
+          village: orderData.village,
+          service: orderData.service,
+          date:    orderData.date,
+          time:    orderData.time,
+          cars:    orderData.cars,
+          status:  orderData.status,
+          paid:    orderData.paid
+        }
+      });
+    }
+
+    async function saveCostToSheets(costData) {
+      return sheetsRequest({
+        action: 'upsert',
+        sheet: 'Costs',
+        idField: 'id',
+        row: {
+          id:    costData.id,
+          name:  costData.name,
+          desc:  costData.desc,
+          date:  costData.date,
+          cost:  costData.cost,
+          litre: costData.litre || '',
+          link:  costData.link,
+          img:   costData.img
+        }
+      });
+    }
+
+    async function saveMethodsToSheets() {
+      return sheetsRequest({
+        action: 'setMethods',
+        sheet: 'Methods',
+        rows: [
+          { type: 'way',       content: methodsData.way },
+          { type: 'method',    content: methodsData.method },
           { type: 'resources', content: methodsData.resources }
-      ];
-      
-      pushDataToSheet('saveMethods', payload);
-    }
-
-    function loadMethodsData() {
-        document.getElementById('cj-way-text').value = methodsData.way;
-        document.getElementById('cj-method-text').value = methodsData.method;
-        document.getElementById('cj-resources-text').value = methodsData.resources;
+        ]
+      });
     }
 
     // --- AUTHENTICATION ---
     const validUsers = ['James', 'Charlie', 'Zakir'];
     const validPass = 'charliesmelly';
 
-    // Check if already logged in
     if(localStorage.getItem('cj_logged_in') === 'true') {
-        showDashboard();
-        fetchAllData(); // Fetch the latest data after restoring session
+      initDashboard();
     }
 
     function login() {
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value;
-      
       if (validUsers.some(u => u.toLowerCase() === user.toLowerCase()) && pass === validPass) {
         localStorage.setItem('cj_logged_in', 'true');
         showDashboard();
-        fetchAllData(); // Fetch the latest data on fresh login
       } else {
         document.getElementById('login-error').style.display = 'block';
       }
@@ -766,107 +844,115 @@ tr:hover { background: rgba(255,255,255,0.8); }
       document.getElementById('password').value = '';
     }
 
-    function showDashboard() {
+    async function initDashboard() {
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
+      showSyncIndicator('syncing');
+      await loadAllFromSheets();
       renderOrders();
       renderCosts();
       updateDashboardStats();
       loadMethodsData();
     }
 
+    function showDashboard() {
+      initDashboard();
+    }
+
     // --- NAVIGATION ---
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
       document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-      
       document.getElementById(`${tabId}-tab`).classList.remove('hidden');
       event.currentTarget.classList.add('active');
     }
 
     // --- MODALS & TOGGLES ---
-    function openModal(id, isNew = false) { 
-      document.getElementById(id).classList.remove('hidden'); 
+    function openModal(id, isNew = false) {
+      document.getElementById(id).classList.remove('hidden');
       if(isNew) {
         if(id === 'order-modal') {
-            document.getElementById('order-form').reset();
-            document.getElementById('o-id').value = '';
-            document.getElementById('order-modal-title').innerText = 'Add Order';
+          document.getElementById('order-form').reset();
+          document.getElementById('o-id').value = '';
+          document.getElementById('order-modal-title').innerText = 'Add Order';
         }
         if(id === 'cost-modal') {
-            document.getElementById('cost-form').reset();
-            document.getElementById('c-id').value = '';
-            document.getElementById('c-date').valueAsDate = new Date();
-            document.getElementById('cost-modal-title').innerText = 'Add Cost';
+          document.getElementById('cost-form').reset();
+          document.getElementById('c-id').value = '';
+          document.getElementById('c-date').valueAsDate = new Date();
+          document.getElementById('cost-modal-title').innerText = 'Add Cost';
         }
       }
     }
+
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function toggleMethodEdit(textAreaId) {
-        const textArea = document.getElementById(textAreaId);
-        if(textArea.hasAttribute('readonly')) {
-            textArea.removeAttribute('readonly');
-            textArea.focus();
-        } else {
-            textArea.setAttribute('readonly', 'true');
-            saveMethodsData();
-        }
+      const textArea = document.getElementById(textAreaId);
+      if(textArea.hasAttribute('readonly')) {
+        textArea.removeAttribute('readonly');
+        textArea.focus();
+      } else {
+        textArea.setAttribute('readonly', 'true');
+        saveMethodsData();
+      }
     }
 
     // --- ORDERS LOGIC ---
-    function saveOrder(e) {
+    async function saveOrder(e) {
       e.preventDefault();
       const id = document.getElementById('o-id').value;
-      
-      // This matches your requested "Orders" columns perfectly
       const orderData = {
-        id: id ? parseInt(id) : Date.now(),
-        name: document.getElementById('o-name').value,
-        phone: document.getElementById('o-phone').value,
-        address: document.getElementById('o-address').value || '',
+        id:      id ? parseInt(id) : Date.now(),
+        name:    document.getElementById('o-name').value,
+        phone:   document.getElementById('o-phone').value,
+        address: document.getElementById('o-address').value,
         village: document.getElementById('o-village').value,
         service: document.getElementById('o-service').value,
-        date: document.getElementById('o-date').value || '',
-        time: document.getElementById('o-time').value || '',
-        cars: parseInt(document.getElementById('o-cars').value) || 1,
-        status: document.getElementById('o-status').value,
-        paid: parseFloat(document.getElementById('o-paid').value) || 0,
-        details: document.getElementById('o-details').value || ''
+        date:    document.getElementById('o-date').value,
+        time:    document.getElementById('o-time').value,
+        cars:    document.getElementById('o-cars').value,
+        status:  document.getElementById('o-status').value,
+        paid:    parseFloat(document.getElementById('o-paid').value) || 0,
+        details: document.getElementById('o-details').value
       };
-      
-      // Update local UI immediately (Optimistic UI)
+
       if(id) {
         const index = orders.findIndex(o => o.id == id);
         orders[index] = orderData;
       } else {
         orders.push(orderData);
       }
-      
-      pushDataToSheet('saveOrder', orderData); // Sync row to Google Sheet
-      
+
       closeModal('order-modal');
       renderOrders();
       updateDashboardStats();
+
+      showSyncIndicator('syncing');
+      try {
+        await saveOrderToSheets(orderData);
+        showSyncIndicator('ok', 'Order saved');
+      } catch(err) {
+        showSyncIndicator('error', 'Save failed — check connection');
+        console.error(err);
+      }
     }
 
     function editOrder(id) {
       const order = orders.find(o => o.id === id);
       if(!order) return;
-      
       document.getElementById('o-id').value = order.id;
       document.getElementById('o-name').value = order.name;
       document.getElementById('o-phone').value = order.phone;
-      document.getElementById('o-address').value = order.address || '';
+      document.getElementById('o-address').value = order.address;
       document.getElementById('o-village').value = order.village;
       document.getElementById('o-service').value = order.service;
-      document.getElementById('o-date').value = order.date || '';
+      document.getElementById('o-date').value = order.date;
       document.getElementById('o-time').value = order.time || '';
-      document.getElementById('o-cars').value = order.cars || 1;
+      document.getElementById('o-cars').value = order.cars;
       document.getElementById('o-status').value = order.status;
       document.getElementById('o-paid').value = order.paid;
-      document.getElementById('o-details').value = order.details || '';
-      
+      document.getElementById('o-details').value = order.details;
       document.getElementById('order-modal-title').innerText = 'Edit Order';
       openModal('order-modal');
     }
@@ -874,33 +960,27 @@ tr:hover { background: rgba(255,255,255,0.8); }
     function renderOrders() {
       const tbody = document.getElementById('orders-tbody');
       tbody.innerHTML = '';
-
-      // Get Active Filters
       const activeStatuses = Array.from(document.querySelectorAll('#status-filters input:checked')).map(cb => cb.value);
       const activeVillage = document.getElementById('filter-village').value;
       const activeService = document.getElementById('filter-service').value;
-
       const filteredOrders = orders.filter(o => {
         const matchStatus = activeStatuses.includes(o.status);
         const matchVillage = activeVillage === 'All' || o.village === activeVillage;
         const matchService = activeService === 'All' || o.service === activeService;
         return matchStatus && matchVillage && matchService;
       });
-
-      // Sort by newest first
       filteredOrders.sort((a,b) => b.id - a.id).forEach(order => {
         const displayDate = order.date ? new Date(order.date).toLocaleDateString('en-GB') : 'TBD';
         const displayTime = order.time || 'TBD';
-        
         tbody.innerHTML += `
           <tr>
             <td><strong>${order.name}</strong><br><small>${order.cars} Car(s)</small></td>
             <td>${order.phone}</td>
-            <td>${order.village}<br><small>${order.address || ''}</small></td>
+            <td>${order.village}<br><small>${order.address}</small></td>
             <td>${order.service}</td>
             <td>${displayDate}</td>
             <td>${displayTime}</td>
-            <td>£${(order.paid || 0).toFixed(2)}</td>
+            <td>£${parseFloat(order.paid).toFixed(2)}</td>
             <td><span class="badge ${order.status}">${order.status}</span></td>
             <td>
               <button class="btn-small btn-edit" onclick="editOrder(${order.id})"><i class="fa-solid fa-pen"></i></button>
@@ -911,79 +991,103 @@ tr:hover { background: rgba(255,255,255,0.8); }
     }
 
     // --- FINANCE LOGIC ---
-    function saveCost(e) {
+    async function saveCost(e) {
       e.preventDefault();
       const id = document.getElementById('c-id').value;
-      
-      // This matches your requested "Costs" columns perfectly
       const costData = {
-        id: id ? parseInt(id) : Date.now(),
-        name: document.getElementById('c-name').value,
-        desc: document.getElementById('c-desc').value || '',
-        date: document.getElementById('c-date').value || '',
-        cost: parseFloat(document.getElementById('c-cost').value) || 0,
+        id:    id ? parseInt(id) : Date.now(),
+        name:  document.getElementById('c-name').value,
+        desc:  document.getElementById('c-desc').value || '',
+        date:  document.getElementById('c-date').value,
+        cost:  parseFloat(document.getElementById('c-cost').value) || 0,
         litre: parseFloat(document.getElementById('c-litre').value) || null,
-        link: document.getElementById('c-link').value || '',
-        img: document.getElementById('c-img').value || ''
+        link:  document.getElementById('c-link').value || '',
+        img:   document.getElementById('c-img').value || ''
       };
-      
+
       if(id) {
         const index = costs.findIndex(c => c.id == id);
         costs[index] = costData;
       } else {
         costs.push(costData);
       }
-      
-      pushDataToSheet('saveCost', costData); // Sync row to Google Sheet
-      
+
       closeModal('cost-modal');
       renderCosts();
       updateDashboardStats();
+
+      showSyncIndicator('syncing');
+      try {
+        await saveCostToSheets(costData);
+        showSyncIndicator('ok', 'Cost saved');
+      } catch(err) {
+        showSyncIndicator('error', 'Save failed — check connection');
+        console.error(err);
+      }
     }
 
     function editCost(id) {
-        const cost = costs.find(c => c.id === id);
-        if(!cost) return;
-
-        document.getElementById('c-id').value = cost.id;
-        document.getElementById('c-name').value = cost.name;
-        document.getElementById('c-desc').value = cost.desc || '';
-        document.getElementById('c-date').value = cost.date || '';
-        document.getElementById('c-cost').value = cost.cost || 0;
-        document.getElementById('c-litre').value = cost.litre || '';
-        document.getElementById('c-link').value = cost.link || '';
-        document.getElementById('c-img').value = cost.img || '';
-
-        document.getElementById('cost-modal-title').innerText = 'Edit Cost';
-        openModal('cost-modal');
+      const cost = costs.find(c => c.id === id);
+      if(!cost) return;
+      document.getElementById('c-id').value = cost.id;
+      document.getElementById('c-name').value = cost.name;
+      document.getElementById('c-desc').value = cost.desc || '';
+      document.getElementById('c-date').value = cost.date;
+      document.getElementById('c-cost').value = cost.cost;
+      document.getElementById('c-litre').value = cost.litre || '';
+      document.getElementById('c-link').value = cost.link || '';
+      document.getElementById('c-img').value = cost.img;
+      document.getElementById('cost-modal-title').innerText = 'Edit Cost';
+      openModal('cost-modal');
     }
 
     function renderCosts() {
       const tbody = document.getElementById('costs-tbody');
       tbody.innerHTML = '';
-
       costs.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(cost => {
         const imgHTML = cost.img ? `<a href="${cost.img}" target="_blank"><img src="${cost.img}" class="img-preview"></a>` : '<span style="color:#aaa;">No Image</span>';
         const linkHTML = cost.link ? `<a href="${cost.link}" target="_blank">Click here</a>` : '-';
         const descHTML = cost.desc ? cost.desc : '-';
-        const litreHTML = cost.litre ? `£${cost.litre.toFixed(2)}` : '-';
+        const litreHTML = cost.litre ? `£${parseFloat(cost.litre).toFixed(2)}` : '-';
         const displayDate = cost.date ? new Date(cost.date).toLocaleDateString('en-GB') : '-';
-        
         tbody.innerHTML += `
           <tr>
             <td><strong>${cost.name}</strong></td>
             <td>${descHTML}</td>
             <td>${displayDate}</td>
-            <td>£${(cost.cost || 0).toFixed(2)}</td>
+            <td>£${parseFloat(cost.cost).toFixed(2)}</td>
             <td>${litreHTML}</td>
             <td>${linkHTML}</td>
             <td>${imgHTML}</td>
             <td>
-                <button class="btn-small btn-edit" onclick="editCost(${cost.id})"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-small btn-edit" onclick="editCost(${cost.id})"><i class="fa-solid fa-pen"></i></button>
             </td>
           </tr>
         `;
       });
+    }
+
+    // --- METHODS LOGIC ---
+    async function saveMethodsData() {
+      methodsData = {
+        way:       document.getElementById('cj-way-text').value,
+        method:    document.getElementById('cj-method-text').value,
+        resources: document.getElementById('cj-resources-text').value
+      };
+      showSyncIndicator('syncing');
+      try {
+        await saveMethodsToSheets();
+        showSyncIndicator('ok', 'Methods saved');
+      } catch(err) {
+        showSyncIndicator('error', 'Save failed — check connection');
+        console.error(err);
+      }
+    }
+
+    function loadMethodsData() {
+      document.getElementById('cj-way-text').value = methodsData.way;
+      document.getElementById('cj-method-text').value = methodsData.method;
+      document.getElementById('cj-resources-text').value = methodsData.resources;
     }
 
     // --- DASHBOARD STATS & CHARTS ---
@@ -992,31 +1096,23 @@ tr:hover { background: rgba(255,255,255,0.8); }
       const now = new Date();
       const currentYear = now.getFullYear();
       const currentMonth = now.getMonth();
-
-      // Filter Data based on dropdown
       const validOrders = orders.filter(o => o.status === 'Completed' && isWithinTimeframe(o.date, timeFilter, currentYear, currentMonth));
       const validCosts = costs.filter(c => isWithinTimeframe(c.date, timeFilter, currentYear, currentMonth));
-
-      const totalRevenue = validOrders.reduce((sum, o) => sum + (o.paid || 0), 0);
-      const totalExpenses = validCosts.reduce((sum, c) => sum + (c.cost || 0), 0);
+      const totalRevenue = validOrders.reduce((sum, o) => sum + parseFloat(o.paid || 0), 0);
+      const totalExpenses = validCosts.reduce((sum, c) => sum + parseFloat(c.cost || 0), 0);
       const netProfit = totalRevenue - totalExpenses;
-
       document.getElementById('stat-revenue').innerText = `£${totalRevenue.toFixed(2)}`;
       document.getElementById('stat-expenses').innerText = `£${totalExpenses.toFixed(2)}`;
-      
       const profitEl = document.getElementById('stat-profit');
       profitEl.innerText = `£${netProfit.toFixed(2)}`;
       profitEl.style.color = netProfit < 0 ? 'var(--danger)' : 'var(--primary)';
-      
       document.getElementById('stat-orders').innerText = validOrders.length;
-
       renderBarChart(timeFilter);
     }
 
     function isWithinTimeframe(dateString, filter, currentYear, currentMonth) {
       if (filter === 'Total') return true;
-      if (!dateString) return false; 
-      
+      if (!dateString) return false;
       const d = new Date(dateString);
       if (filter === 'Yearly') return d.getFullYear() === currentYear;
       if (filter === 'Monthly') return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
@@ -1026,47 +1122,38 @@ tr:hover { background: rgba(255,255,255,0.8); }
     function renderBarChart(timeFilter) {
       const chart = document.getElementById('bar-chart');
       chart.innerHTML = '';
-      
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const currentMonth = new Date().getMonth();
-      
       let chartData = [];
       let maxVal = 0;
-
       for(let i = 5; i >= 0; i--) {
         let mIndex = currentMonth - i;
         let yOffset = 0;
         if(mIndex < 0) { mIndex += 12; yOffset = -1; }
-        
         let targetYear = new Date().getFullYear() + yOffset;
-        
         let mRevenue = orders
-            .filter(o => o.status === 'Completed' && o.date)
-            .filter(o => {
-                let d = new Date(o.date);
-                return d.getMonth() === mIndex && d.getFullYear() === targetYear;
-            })
-            .reduce((sum, o) => sum + (o.paid || 0), 0);
-
+          .filter(o => o.status === 'Completed' && o.date)
+          .filter(o => {
+            let d = new Date(o.date);
+            return d.getMonth() === mIndex && d.getFullYear() === targetYear;
+          })
+          .reduce((sum, o) => sum + parseFloat(o.paid || 0), 0);
         if(mRevenue > maxVal) maxVal = mRevenue;
         chartData.push({ label: months[mIndex], value: mRevenue });
       }
-
       chartData.forEach(data => {
         let heightPercent = maxVal === 0 ? 0 : (data.value / maxVal) * 100;
-        if(heightPercent > 0 && heightPercent < 5) heightPercent = 5; 
-
+        if(heightPercent > 0 && heightPercent < 5) heightPercent = 5;
         chart.innerHTML += `
           <div class="bar-wrapper" title="£${data.value.toFixed(2)}">
             <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; width:100%; align-items:center;">
-                <div class="bar" style="height: ${heightPercent}%;"></div>
+              <div class="bar" style="height: ${heightPercent}%;"></div>
             </div>
             <div class="bar-label">${data.label}</div>
           </div>
         `;
       });
     }
-
-  </script>
+</script>
 </body>
 </html>
