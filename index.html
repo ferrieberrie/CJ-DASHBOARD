@@ -662,67 +662,21 @@ tr:hover { background: rgba(255,255,255,0.8); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyPksR14X1cad3idTfktb0OW-AGI1O6kVAdPrLNZUqyOtNlB4Y1P_6j3uj6BfBJoal_2A/exec";
 
-// GLOBAL DATA (now from Google Sheets)
+// --- GLOBAL DATA ---
 let orders = [];
 let costs = [];
 let methodsData = { way: '', method: '', resources: '' };
 
-// ================= LOAD DATA =================
-async function loadAllData() {
-  orders = await fetch(`${API_URL}?type=Orders`).then(r => r.json());
-  costs = await fetch(`${API_URL}?type=Costs`).then(r => r.json());
-  const methods = await fetch(`${API_URL}?type=Methods`).then(r => r.json());
-
-  // reset before filling
-  methodsData = { way: '', method: '', resources: '' };
-
-  methods.forEach(m => {
-    if (m.type === "way") methodsData.way = m.content;
-    if (m.type === "method") methodsData.method = m.content;
-    if (m.type === "resources") methodsData.resources = m.content;
-  });
-
-  renderOrders();
-  renderCosts();
-  updateDashboardStats();
-  loadMethodsData();
-}
-
-// ================= SAVE TO SHEETS =================
-async function saveToSheet(type, action, payload) {
-  await fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ type, action, payload })
-  });
-}
-
-// ================= METHODS =================
-function loadMethodsData() {
-  document.getElementById('cj-way-text').value = methodsData.way;
-  document.getElementById('cj-method-text').value = methodsData.method;
-  document.getElementById('cj-resources-text').value = methodsData.resources;
-}
-
-async function saveMethodsData() {
-  const data = [
-    { id: "way", type: "way", content: document.getElementById('cj-way-text').value },
-    { id: "method", type: "method", content: document.getElementById('cj-method-text').value },
-    { id: "resources", type: "resources", content: document.getElementById('cj-resources-text').value }
-  ];
-
-  for (let item of data) {
-    await saveToSheet("Methods", "update", item);
-  }
-}
-
-// ================= AUTH =================
+// --- AUTHENTICATION ---
 const validUsers = ['James', 'Charlie', 'Zakir'];
 const validPass = 'charliesmelly';
 
-// auto login check
-if (localStorage.getItem('cj_logged_in') === 'true') {
-  showDashboard();
-}
+// Check if already logged in on load
+window.onload = () => {
+  if (localStorage.getItem('cj_logged_in') === 'true') {
+    showDashboard();
+  }
+};
 
 function login() {
   const user = document.getElementById('username').value.trim();
@@ -738,7 +692,7 @@ function login() {
 
 function logout() {
   localStorage.removeItem('cj_logged_in');
-  location.reload();
+  location.reload(); // Reload to reset state and show login screen
 }
 
 async function showDashboard() {
@@ -747,71 +701,155 @@ async function showDashboard() {
   await loadAllData();
 }
 
-// ================= ORDERS =================
+// --- GOOGLE SHEETS API (LOAD & SAVE) ---
+
+// LOAD ALL DATA
+async function loadAllData() {
+  try {
+    // Fetch all data concurrently for better performance
+    const [ordersData, costsData, methodsDataFetch] = await Promise.all([
+      fetch(`${API_URL}?type=Orders`).then(r => r.json()),
+      fetch(`${API_URL}?type=Costs`).then(r => r.json()),
+      fetch(`${API_URL}?type=Methods`).then(r => r.json())
+    ]);
+
+    orders = ordersData || [];
+    costs = costsData || [];
+
+    // Map methods data
+    methodsDataFetch.forEach(m => {
+      if (m.type === "way") methodsData.way = m.content;
+      if (m.type === "method") methodsData.method = m.content;
+      if (m.type === "resources") methodsData.resources = m.content;
+    });
+
+    // Update the UI (Ensure these functions exist in your main code)
+    renderOrders();
+    renderCosts();
+    updateDashboardStats();
+    loadMethodsDataUI();
+  } catch (error) {
+    console.error("Error fetching data from Google Sheets:", error);
+  }
+}
+
+// HELPER: SAVE TO SHEETS
+async function saveToSheet(type, action, payload) {
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ type, action, payload })
+    });
+  } catch (error) {
+    console.error(`Error saving ${type}:`, error);
+  }
+}
+
+// --- UI UPDATES & SAVING ---
+
+// Load Methods into the textareas
+function loadMethodsDataUI() {
+  document.getElementById('cj-way-text').value = methodsData.way || '';
+  document.getElementById('cj-method-text').value = methodsData.method || '';
+  document.getElementById('cj-resources-text').value = methodsData.resources || '';
+}
+
+// Save Methods from textareas to Google Sheets
+async function saveMethodsData() {
+  // Update local variables first
+  methodsData = {
+    way: document.getElementById('cj-way-text').value,
+    method: document.getElementById('cj-method-text').value,
+    resources: document.getElementById('cj-resources-text').value
+  };
+
+  const data = [
+    { type: "way", content: methodsData.way },
+    { type: "method", content: methodsData.method },
+    { type: "resources", content: methodsData.resources }
+  ];
+
+  // Save each to Sheets
+  for (let item of data) {
+    await saveToSheet("Methods", "update", item);
+  }
+  
+  alert("Methods saved to Google Sheets!");
+}
+
+// Save Order (Create / Update)
 async function saveOrder(e) {
   e.preventDefault();
 
   const id = document.getElementById('o-id').value || Date.now();
-
   const orderData = {
-    id,
-    name: o-name.value,
-    phone: o-phone.value,
-    address: o-address.value,
-    village: o-village.value,
-    service: o-service.value,
-    date: o-date.value,
-    time: o-time.value,
-    cars: o-cars.value,
-    status: o-status.value,
-    paid: parseFloat(o-paid.value) || 0,
-    details: o-details.value
+    id: id,
+    name: document.getElementById('o-name').value,
+    phone: document.getElementById('o-phone').value,
+    address: document.getElementById('o-address').value,
+    village: document.getElementById('o-village').value,
+    service: document.getElementById('o-service').value,
+    date: document.getElementById('o-date').value,
+    time: document.getElementById('o-time').value,
+    cars: document.getElementById('o-cars').value,
+    status: document.getElementById('o-status').value,
+    paid: parseFloat(document.getElementById('o-paid').value) || 0,
+    details: document.getElementById('o-details').value
   };
 
   const exists = orders.find(o => o.id == id);
-
   if (exists) {
     await saveToSheet("Orders", "update", orderData);
   } else {
     await saveToSheet("Orders", "add", orderData);
   }
 
+  // Refresh data and close modal
   await loadAllData();
   closeModal('order-modal');
+  
+  // Optional: clear the form 
+  // document.getElementById('your-order-form-id').reset();
 }
 
-// ================= COSTS =================
+// Save Cost (Create / Update)
 async function saveCost(e) {
   e.preventDefault();
 
   const id = document.getElementById('c-id').value || Date.now();
-
   const costData = {
-    id,
-    name: c-name.value,
-    desc: c-desc.value,
-    date: c-date.value,
-    cost: parseFloat(c-cost.value),
-    litre: parseFloat(c-litre.value) || '',
-    link: c-link.value,
-    img: c-img.value
+    id: id,
+    name: document.getElementById('c-name').value,
+    desc: document.getElementById('c-desc').value,
+    date: document.getElementById('c-date').value,
+    cost: parseFloat(document.getElementById('c-cost').value) || 0,
+    litre: parseFloat(document.getElementById('c-litre').value) || '',
+    link: document.getElementById('c-link').value,
+    img: document.getElementById('c-img').value
   };
 
   const exists = costs.find(c => c.id == id);
-
   if (exists) {
     await saveToSheet("Costs", "update", costData);
   } else {
     await saveToSheet("Costs", "add", costData);
   }
 
+  // Refresh data and close modal
   await loadAllData();
   closeModal('cost-modal');
+  
+  // Optional: clear the form 
+  // document.getElementById('your-cost-form-id').reset();
 }
 
-// ================= LIVE SYNC =================
-// refresh every 5 seconds so all devices stay updated
-setInterval(loadAllData, 5000);
+// AUTO REFRESH (LIVE SYNC)
+// Changed from 5000ms to 15000ms to prevent Google Apps Script rate limiting.
+setInterval(() => {
+  if (localStorage.getItem('cj_logged_in') === 'true') {
+    loadAllData();
+  }
+}, 15000); 
 
 </script>
 </body>
