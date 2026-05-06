@@ -659,19 +659,22 @@ tr:hover { background: rgba(255,255,255,0.8); }
     </div>
   </div>
 
-  <script>
+<script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyPksR14X1cad3idTfktb0OW-AGI1O6kVAdPrLNZUqyOtNlB4Y1P_6j3uj6BfBJoal_2A/exec";
 
-// GLOBAL DATA
+// GLOBAL DATA (now from Google Sheets)
 let orders = [];
 let costs = [];
 let methodsData = { way: '', method: '', resources: '' };
 
-// LOAD ALL DATA FROM SHEETS
+// ================= LOAD DATA =================
 async function loadAllData() {
   orders = await fetch(`${API_URL}?type=Orders`).then(r => r.json());
   costs = await fetch(`${API_URL}?type=Costs`).then(r => r.json());
   const methods = await fetch(`${API_URL}?type=Methods`).then(r => r.json());
+
+  // reset before filling
+  methodsData = { way: '', method: '', resources: '' };
 
   methods.forEach(m => {
     if (m.type === "way") methodsData.way = m.content;
@@ -685,7 +688,7 @@ async function loadAllData() {
   loadMethodsData();
 }
 
-// SAVE TO SHEETS
+// ================= SAVE TO SHEETS =================
 async function saveToSheet(type, action, payload) {
   await fetch(API_URL, {
     method: "POST",
@@ -693,11 +696,31 @@ async function saveToSheet(type, action, payload) {
   });
 }
 
-// --- AUTH (unchanged) ---
-const validUsers = ['James','Charlie','Zakir'];
+// ================= METHODS =================
+function loadMethodsData() {
+  document.getElementById('cj-way-text').value = methodsData.way;
+  document.getElementById('cj-method-text').value = methodsData.method;
+  document.getElementById('cj-resources-text').value = methodsData.resources;
+}
+
+async function saveMethodsData() {
+  const data = [
+    { id: "way", type: "way", content: document.getElementById('cj-way-text').value },
+    { id: "method", type: "method", content: document.getElementById('cj-method-text').value },
+    { id: "resources", type: "resources", content: document.getElementById('cj-resources-text').value }
+  ];
+
+  for (let item of data) {
+    await saveToSheet("Methods", "update", item);
+  }
+}
+
+// ================= AUTH =================
+const validUsers = ['James', 'Charlie', 'Zakir'];
 const validPass = 'charliesmelly';
 
-if(localStorage.getItem('cj_logged_in') === 'true') {
+// auto login check
+if (localStorage.getItem('cj_logged_in') === 'true') {
   showDashboard();
 }
 
@@ -724,7 +747,7 @@ async function showDashboard() {
   await loadAllData();
 }
 
-// --- SAVE ORDER ---
+// ================= ORDERS =================
 async function saveOrder(e) {
   e.preventDefault();
 
@@ -757,7 +780,7 @@ async function saveOrder(e) {
   closeModal('order-modal');
 }
 
-// --- SAVE COST ---
+// ================= COSTS =================
 async function saveCost(e) {
   e.preventDefault();
 
@@ -786,22 +809,10 @@ async function saveCost(e) {
   closeModal('cost-modal');
 }
 
-// --- METHODS SAVE ---
-async function saveMethodsData() {
-  const data = [
-    { type: "way", content: cj-way-text.value },
-    { type: "method", content: cj-method-text.value },
-    { type: "resources", content: cj-resources-text.value }
-  ];
-
-  for (let item of data) {
-    await saveToSheet("Methods", "update", item);
-  }
-}
-
-// AUTO REFRESH (LIVE SYNC)
+// ================= LIVE SYNC =================
+// refresh every 5 seconds so all devices stay updated
 setInterval(loadAllData, 5000);
 
-  </script>
+</script>
 </body>
 </html>
