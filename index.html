@@ -660,354 +660,147 @@ tr:hover { background: rgba(255,255,255,0.8); }
   </div>
 
   <script>
-    // --- DATA STATE (Saved to Local Storage for persistence) ---
-    let orders = JSON.parse(localStorage.getItem('cj_orders')) || [];
-    let costs = JSON.parse(localStorage.getItem('cj_costs')) || [];
-    let methodsData = JSON.parse(localStorage.getItem('cj_methods_data')) || { way: '', method: '', resources: '' };
+const API_URL = "PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE";
 
-    function saveData() {
-      localStorage.setItem('cj_orders', JSON.stringify(orders));
-      localStorage.setItem('cj_costs', JSON.stringify(costs));
-      updateDashboardStats();
-    }
+// GLOBAL DATA
+let orders = [];
+let costs = [];
+let methodsData = { way: '', method: '', resources: '' };
 
-    function saveMethodsData() {
-      methodsData = {
-          way: document.getElementById('cj-way-text').value,
-          method: document.getElementById('cj-method-text').value,
-          resources: document.getElementById('cj-resources-text').value
-      };
-      localStorage.setItem('cj_methods_data', JSON.stringify(methodsData));
-    }
+// LOAD ALL DATA FROM SHEETS
+async function loadAllData() {
+  orders = await fetch(`${API_URL}?type=Orders`).then(r => r.json());
+  costs = await fetch(`${API_URL}?type=Costs`).then(r => r.json());
+  const methods = await fetch(`${API_URL}?type=Methods`).then(r => r.json());
 
-    function loadMethodsData() {
-        document.getElementById('cj-way-text').value = methodsData.way;
-        document.getElementById('cj-method-text').value = methodsData.method;
-        document.getElementById('cj-resources-text').value = methodsData.resources;
-    }
+  methods.forEach(m => {
+    if (m.type === "way") methodsData.way = m.content;
+    if (m.type === "method") methodsData.method = m.content;
+    if (m.type === "resources") methodsData.resources = m.content;
+  });
 
-    // --- AUTHENTICATION ---
-    const validUsers = ['James', 'Charlie', 'Zakir'];
-    const validPass = 'charliesmelly';
+  renderOrders();
+  renderCosts();
+  updateDashboardStats();
+  loadMethodsData();
+}
 
-    // Check if already logged in
-    if(localStorage.getItem('cj_logged_in') === 'true') {
-        showDashboard();
-    }
+// SAVE TO SHEETS
+async function saveToSheet(type, action, payload) {
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ type, action, payload })
+  });
+}
 
-    function login() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value;
-      
-      if (validUsers.some(u => u.toLowerCase() === user.toLowerCase()) && pass === validPass) {
-        localStorage.setItem('cj_logged_in', 'true');
-        showDashboard();
-      } else {
-        document.getElementById('login-error').style.display = 'block';
-      }
-    }
+// --- AUTH (unchanged) ---
+const validUsers = ['James','Charlie','Zakir'];
+const validPass = 'charliesmelly';
 
-    function logout() {
-      localStorage.removeItem('cj_logged_in');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('login-screen').classList.remove('hidden');
-      document.getElementById('password').value = '';
-    }
+if(localStorage.getItem('cj_logged_in') === 'true') {
+  showDashboard();
+}
 
-    function showDashboard() {
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      renderOrders();
-      renderCosts();
-      updateDashboardStats();
-      loadMethodsData();
-    }
+function login() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value;
 
-    // --- NAVIGATION ---
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-      document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-      
-      document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-      event.currentTarget.classList.add('active');
-    }
+  if (validUsers.some(u => u.toLowerCase() === user.toLowerCase()) && pass === validPass) {
+    localStorage.setItem('cj_logged_in', 'true');
+    showDashboard();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
 
-    // --- MODALS & TOGGLES ---
-    function openModal(id, isNew = false) { 
-      document.getElementById(id).classList.remove('hidden'); 
-      if(isNew) {
-        if(id === 'order-modal') {
-            document.getElementById('order-form').reset();
-            document.getElementById('o-id').value = '';
-            document.getElementById('order-modal-title').innerText = 'Add Order';
-        }
-        if(id === 'cost-modal') {
-            document.getElementById('cost-form').reset();
-            document.getElementById('c-id').value = '';
-            document.getElementById('c-date').valueAsDate = new Date();
-            document.getElementById('cost-modal-title').innerText = 'Add Cost';
-        }
-      }
-    }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function logout() {
+  localStorage.removeItem('cj_logged_in');
+  location.reload();
+}
 
-    function toggleMethodEdit(textAreaId) {
-        const textArea = document.getElementById(textAreaId);
-        if(textArea.hasAttribute('readonly')) {
-            textArea.removeAttribute('readonly');
-            textArea.focus();
-        } else {
-            textArea.setAttribute('readonly', 'true');
-            saveMethodsData();
-        }
-    }
+async function showDashboard() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  await loadAllData();
+}
 
-    // --- ORDERS LOGIC ---
-    function saveOrder(e) {
-      e.preventDefault();
-      const id = document.getElementById('o-id').value;
-      const orderData = {
-        id: id ? parseInt(id) : Date.now(),
-        name: document.getElementById('o-name').value,
-        phone: document.getElementById('o-phone').value,
-        address: document.getElementById('o-address').value,
-        village: document.getElementById('o-village').value,
-        service: document.getElementById('o-service').value,
-        date: document.getElementById('o-date').value,
-        time: document.getElementById('o-time').value,
-        cars: document.getElementById('o-cars').value,
-        status: document.getElementById('o-status').value,
-        paid: parseFloat(document.getElementById('o-paid').value) || 0,
-        details: document.getElementById('o-details').value
-      };
-      
-      if(id) {
-        const index = orders.findIndex(o => o.id == id);
-        orders[index] = orderData;
-      } else {
-        orders.push(orderData);
-      }
-      
-      saveData();
-      closeModal('order-modal');
-      renderOrders();
-    }
+// --- SAVE ORDER ---
+async function saveOrder(e) {
+  e.preventDefault();
 
-    function editOrder(id) {
-      const order = orders.find(o => o.id === id);
-      if(!order) return;
-      
-      document.getElementById('o-id').value = order.id;
-      document.getElementById('o-name').value = order.name;
-      document.getElementById('o-phone').value = order.phone;
-      document.getElementById('o-address').value = order.address;
-      document.getElementById('o-village').value = order.village;
-      document.getElementById('o-service').value = order.service;
-      document.getElementById('o-date').value = order.date;
-      document.getElementById('o-time').value = order.time || '';
-      document.getElementById('o-cars').value = order.cars;
-      document.getElementById('o-status').value = order.status;
-      document.getElementById('o-paid').value = order.paid;
-      document.getElementById('o-details').value = order.details;
-      
-      document.getElementById('order-modal-title').innerText = 'Edit Order';
-      openModal('order-modal');
-    }
+  const id = document.getElementById('o-id').value || Date.now();
 
-    function renderOrders() {
-      const tbody = document.getElementById('orders-tbody');
-      tbody.innerHTML = '';
+  const orderData = {
+    id,
+    name: o-name.value,
+    phone: o-phone.value,
+    address: o-address.value,
+    village: o-village.value,
+    service: o-service.value,
+    date: o-date.value,
+    time: o-time.value,
+    cars: o-cars.value,
+    status: o-status.value,
+    paid: parseFloat(o-paid.value) || 0,
+    details: o-details.value
+  };
 
-      // Get Active Filters
-      const activeStatuses = Array.from(document.querySelectorAll('#status-filters input:checked')).map(cb => cb.value);
-      const activeVillage = document.getElementById('filter-village').value;
-      const activeService = document.getElementById('filter-service').value;
+  const exists = orders.find(o => o.id == id);
 
-      const filteredOrders = orders.filter(o => {
-        const matchStatus = activeStatuses.includes(o.status);
-        const matchVillage = activeVillage === 'All' || o.village === activeVillage;
-        const matchService = activeService === 'All' || o.service === activeService;
-        return matchStatus && matchVillage && matchService;
-      });
+  if (exists) {
+    await saveToSheet("Orders", "update", orderData);
+  } else {
+    await saveToSheet("Orders", "add", orderData);
+  }
 
-      // Sort by newest first
-      filteredOrders.sort((a,b) => b.id - a.id).forEach(order => {
-        const displayDate = order.date ? new Date(order.date).toLocaleDateString('en-GB') : 'TBD';
-        const displayTime = order.time || 'TBD';
-        
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>${order.name}</strong><br><small>${order.cars} Car(s)</small></td>
-            <td>${order.phone}</td>
-            <td>${order.village}<br><small>${order.address}</small></td>
-            <td>${order.service}</td>
-            <td>${displayDate}</td>
-            <td>${displayTime}</td>
-            <td>£${order.paid.toFixed(2)}</td>
-            <td><span class="badge ${order.status}">${order.status}</span></td>
-            <td>
-              <button class="btn-small btn-edit" onclick="editOrder(${order.id})"><i class="fa-solid fa-pen"></i></button>
-            </td>
-          </tr>
-        `;
-      });
-    }
+  await loadAllData();
+  closeModal('order-modal');
+}
 
-    // --- FINANCE LOGIC ---
-    function saveCost(e) {
-      e.preventDefault();
-      const id = document.getElementById('c-id').value;
-      const costData = {
-        id: id ? parseInt(id) : Date.now(),
-        name: document.getElementById('c-name').value,
-        desc: document.getElementById('c-desc').value || '',
-        date: document.getElementById('c-date').value,
-        cost: parseFloat(document.getElementById('c-cost').value) || 0,
-        litre: parseFloat(document.getElementById('c-litre').value) || null,
-        link: document.getElementById('c-link').value || '',
-        img: document.getElementById('c-img').value || ''
-      };
-      
-      if(id) {
-        const index = costs.findIndex(c => c.id == id);
-        costs[index] = costData;
-      } else {
-        costs.push(costData);
-      }
-      
-      saveData();
-      closeModal('cost-modal');
-      renderCosts();
-    }
+// --- SAVE COST ---
+async function saveCost(e) {
+  e.preventDefault();
 
-    function editCost(id) {
-        const cost = costs.find(c => c.id === id);
-        if(!cost) return;
+  const id = document.getElementById('c-id').value || Date.now();
 
-        document.getElementById('c-id').value = cost.id;
-        document.getElementById('c-name').value = cost.name;
-        document.getElementById('c-desc').value = cost.desc || '';
-        document.getElementById('c-date').value = cost.date;
-        document.getElementById('c-cost').value = cost.cost;
-        document.getElementById('c-litre').value = cost.litre || '';
-        document.getElementById('c-link').value = cost.link || '';
-        document.getElementById('c-img').value = cost.img;
+  const costData = {
+    id,
+    name: c-name.value,
+    desc: c-desc.value,
+    date: c-date.value,
+    cost: parseFloat(c-cost.value),
+    litre: parseFloat(c-litre.value) || '',
+    link: c-link.value,
+    img: c-img.value
+  };
 
-        document.getElementById('cost-modal-title').innerText = 'Edit Cost';
-        openModal('cost-modal');
-    }
+  const exists = costs.find(c => c.id == id);
 
-    function renderCosts() {
-      const tbody = document.getElementById('costs-tbody');
-      tbody.innerHTML = '';
+  if (exists) {
+    await saveToSheet("Costs", "update", costData);
+  } else {
+    await saveToSheet("Costs", "add", costData);
+  }
 
-      costs.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(cost => {
-        const imgHTML = cost.img ? `<a href="${cost.img}" target="_blank"><img src="${cost.img}" class="img-preview"></a>` : '<span style="color:#aaa;">No Image</span>';
-        const linkHTML = cost.link ? `<a href="${cost.link}" target="_blank">Click here</a>` : '-';
-        const descHTML = cost.desc ? cost.desc : '-';
-        const litreHTML = cost.litre ? `£${cost.litre.toFixed(2)}` : '-';
-        const displayDate = cost.date ? new Date(cost.date).toLocaleDateString('en-GB') : '-';
-        
-        tbody.innerHTML += `
-          <tr>
-            <td><strong>${cost.name}</strong></td>
-            <td>${descHTML}</td>
-            <td>${displayDate}</td>
-            <td>£${cost.cost.toFixed(2)}</td>
-            <td>${litreHTML}</td>
-            <td>${linkHTML}</td>
-            <td>${imgHTML}</td>
-            <td>
-                <button class="btn-small btn-edit" onclick="editCost(${cost.id})"><i class="fa-solid fa-pen"></i></button>
-            </td>
-          </tr>
-        `;
-      });
-    }
+  await loadAllData();
+  closeModal('cost-modal');
+}
 
-    // --- DASHBOARD STATS & CHARTS ---
-    function updateDashboardStats() {
-      const timeFilter = document.getElementById('time-filter').value;
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
+// --- METHODS SAVE ---
+async function saveMethodsData() {
+  const data = [
+    { type: "way", content: cj-way-text.value },
+    { type: "method", content: cj-method-text.value },
+    { type: "resources", content: cj-resources-text.value }
+  ];
 
-      // Filter Data based on dropdown
-      const validOrders = orders.filter(o => o.status === 'Completed' && isWithinTimeframe(o.date, timeFilter, currentYear, currentMonth));
-      const validCosts = costs.filter(c => isWithinTimeframe(c.date, timeFilter, currentYear, currentMonth));
+  for (let item of data) {
+    await saveToSheet("Methods", "update", item);
+  }
+}
 
-      const totalRevenue = validOrders.reduce((sum, o) => sum + o.paid, 0);
-      const totalExpenses = validCosts.reduce((sum, c) => sum + c.cost, 0);
-      const netProfit = totalRevenue - totalExpenses;
-
-      document.getElementById('stat-revenue').innerText = `£${totalRevenue.toFixed(2)}`;
-      document.getElementById('stat-expenses').innerText = `£${totalExpenses.toFixed(2)}`;
-      
-      const profitEl = document.getElementById('stat-profit');
-      profitEl.innerText = `£${netProfit.toFixed(2)}`;
-      profitEl.style.color = netProfit < 0 ? 'var(--danger)' : 'var(--primary)';
-      
-      document.getElementById('stat-orders').innerText = validOrders.length;
-
-      renderBarChart(timeFilter);
-    }
-
-    function isWithinTimeframe(dateString, filter, currentYear, currentMonth) {
-      if (filter === 'Total') return true;
-      if (!dateString) return false; // If no date, exclude from time-filtered stats
-      
-      const d = new Date(dateString);
-      if (filter === 'Yearly') return d.getFullYear() === currentYear;
-      if (filter === 'Monthly') return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
-      return true;
-    }
-
-    function renderBarChart(timeFilter) {
-      const chart = document.getElementById('bar-chart');
-      chart.innerHTML = '';
-      
-      // Calculate last 6 months revenue for visual graph (simulated real data tracking)
-      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const currentMonth = new Date().getMonth();
-      
-      let chartData = [];
-      let maxVal = 0;
-
-      // Generate Data for last 5 months + current
-      for(let i = 5; i >= 0; i--) {
-        let mIndex = currentMonth - i;
-        let yOffset = 0;
-        if(mIndex < 0) { mIndex += 12; yOffset = -1; }
-        
-        let targetYear = new Date().getFullYear() + yOffset;
-        
-        let mRevenue = orders
-            .filter(o => o.status === 'Completed' && o.date)
-            .filter(o => {
-                let d = new Date(o.date);
-                return d.getMonth() === mIndex && d.getFullYear() === targetYear;
-            })
-            .reduce((sum, o) => sum + o.paid, 0);
-
-        if(mRevenue > maxVal) maxVal = mRevenue;
-        chartData.push({ label: months[mIndex], value: mRevenue });
-      }
-
-      // Draw bars
-      chartData.forEach(data => {
-        let heightPercent = maxVal === 0 ? 0 : (data.value / maxVal) * 100;
-        if(heightPercent > 0 && heightPercent < 5) heightPercent = 5; // minimum visibility
-
-        chart.innerHTML += `
-          <div class="bar-wrapper" title="£${data.value.toFixed(2)}">
-            <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; width:100%; align-items:center;">
-                <div class="bar" style="height: ${heightPercent}%;"></div>
-            </div>
-            <div class="bar-label">${data.label}</div>
-          </div>
-        `;
-      });
-    }
+// AUTO REFRESH (LIVE SYNC)
+setInterval(loadAllData, 5000);
 
   </script>
 </body>
