@@ -899,15 +899,25 @@ async function saveMethodsToSheets() {
 }
 
 // ── AUTH ───────────────────────────────────────────────────
-const validUsers = ['james','charlie','zakir'];
-const validPass = 'charliesmelly';
+// Passwords stored as SHA-256 hashes — run getHash('yourpassword') in console to generate new ones
+const CREDENTIALS = {
+  james:   '5a03d8dea70d1d3cec540161949ca6a1a2939042604ade87788a2ae4015b07b4 ',
+  charlie: '5a03d8dea70d1d3cec540161949ca6a1a2939042604ade87788a2ae4015b07b4',
+  zakir:   '5a03d8dea70d1d3cec540161949ca6a1a2939042604ade87788a2ae4015b07b4'
+};
+
+async function getHash(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 if (localStorage.getItem('cj_logged_in')==='true') initDashboard();
 
-function login() {
+async function login() {
   const user = document.getElementById('username').value.trim().toLowerCase();
   const pass = document.getElementById('password').value;
-  if (validUsers.includes(user) && pass===validPass) {
+  const hash = await getHash(pass);
+  if (CREDENTIALS[user] && hash === CREDENTIALS[user]) {
     localStorage.setItem('cj_logged_in','true');
     initDashboard();
   } else {
@@ -1059,7 +1069,10 @@ function getCardClass(dateStr, timeStr) {
 
 function formatDateNice(dateStr) {
   if (!dateStr) return 'Date TBD';
-  const d = new Date(dateStr);
+  const clean = cleanDate(dateStr);
+  if (!clean) return dateStr;
+  const [y, mo, day] = clean.split('-').map(Number);
+  const d = new Date(y, mo - 1, day);
   if (isNaN(d)) return dateStr;
   return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
 }
@@ -1074,9 +1087,11 @@ function renderUpcomingCards() {
   const list = orders
     .filter(o => ['Confirmation','Confirmed'].includes(o.status) && o.date)
     .filter(o => {
-      const d = new Date(cleanDate(o.date));
+      const clean = cleanDate(o.date);
+      if (!clean) return false;
+      const [y, mo, day] = clean.split('-').map(Number);
+      const d = new Date(y, mo - 1, day);
       const today = new Date(); today.setHours(0,0,0,0);
-      d.setHours(0,0,0,0);
       return d >= today;
     })
     .sort((a,b) => (makeLocalDate(a.date, a.time) || 0) - (makeLocalDate(b.date, b.time) || 0));
