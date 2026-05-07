@@ -609,7 +609,7 @@ function logout() {
   if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
 }
 
-if (localStorage.getItem('cj_logged_in') === 'true') initDashboard();
+localStorage.removeItem('cj_logged_in');
 
 // ══════════════════════════════════════════════════════════
 // SHEETS + DATA
