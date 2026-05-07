@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +25,6 @@ html { font-size: 16px; }
 body { margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(--deep); min-height:100vh; }
 .hidden { display:none !important; }
 
-/* GLASS */
 .glass {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -34,7 +34,7 @@ body { margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(-
   border-radius: 18px;
 }
 
-/* NAV - desktop */
+/* NAV */
 .nav {
   position: fixed; top:12px; left:12px; right:12px;
   padding: 10px 20px;
@@ -48,10 +48,7 @@ body { margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(-
   box-shadow: 0 6px 24px rgba(0,0,0,0.06);
   gap: 10px;
 }
-.nav .logo {
-  font-weight:800; color:var(--deep); font-size:17px;
-  display:flex; align-items:center; gap:7px; flex-shrink:0;
-}
+.nav .logo { font-weight:800; color:var(--deep); font-size:17px; display:flex; align-items:center; gap:7px; flex-shrink:0; }
 .nav-links { display:flex; gap:6px; flex-wrap:nowrap; }
 .nav-links a {
   text-decoration:none; font-weight:600; color:var(--muted);
@@ -68,7 +65,7 @@ body { margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(-
 }
 .logout-btn:hover { background:var(--danger); color:white; }
 
-/* BOTTOM NAV - mobile */
+/* BOTTOM NAV */
 .bottom-nav {
   display: none;
   position: fixed; bottom:0; left:0; right:0; z-index:1000;
@@ -88,7 +85,6 @@ body { margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(-
 }
 .bnav-item i { font-size:20px; }
 .bnav-item.active { color:var(--primary); }
-.bnav-item.active i { color:var(--primary); }
 
 /* LOGIN */
 #login-screen { height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; }
@@ -103,8 +99,7 @@ input, select, textarea {
   padding:11px 13px; border-radius:12px;
   border:1.5px solid rgba(0,0,0,0.1);
   font-family:inherit; background:white; outline:none; transition:0.2s;
-  font-size:16px;
-  width:100%;
+  font-size:16px; width:100%;
 }
 input:focus, select:focus, textarea:focus { border-color:var(--primary); }
 button.btn-primary {
@@ -114,11 +109,7 @@ button.btn-primary {
   box-shadow:0 4px 14px rgba(15,98,254,0.28); font-size:15px;
 }
 button.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(15,98,254,0.38); }
-button.btn-primary:active { transform:translateY(0); }
-button.btn-small {
-  padding:8px 13px; border-radius:10px; border:none;
-  font-weight:600; cursor:pointer; font-size:13px;
-}
+button.btn-small { padding:8px 13px; border-radius:10px; border:none; font-weight:600; cursor:pointer; font-size:13px; }
 .btn-edit { background:var(--accent); color:var(--deep); }
 .btn-danger { background:var(--danger); color:white; }
 .btn-success { background:var(--success); color:white; }
@@ -128,136 +119,40 @@ button.btn-small {
 .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
 .section-header h2 { margin:0; font-size:22px; }
 
-/* ── UPCOMING BOOKINGS HERO ────────────────────────────────── */
-.upcoming-hero {
-  margin-bottom: 22px;
-  padding: 0;
-}
-.upcoming-hero-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.upcoming-hero-header h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.upcoming-hero-header .badge-count {
-  background: var(--primary);
-  color: white;
-  border-radius: 20px;
-  padding: 2px 10px;
-  font-size: 12px;
-  font-weight: 700;
-}
-.upcoming-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 12px;
-}
+/* UPCOMING */
+.upcoming-hero { margin-bottom: 22px; }
+.upcoming-hero-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
+.upcoming-hero-header h2 { margin:0; font-size:20px; font-weight:800; display:flex; align-items:center; gap:8px; }
+.upcoming-hero-header .badge-count { background:var(--primary); color:white; border-radius:20px; padding:2px 10px; font-size:12px; font-weight:700; }
+.upcoming-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:12px; }
 .upcoming-card {
-  padding: 18px 18px 16px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.8);
-  box-shadow: 0 4px 20px rgba(15,98,254,0.07);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.18s, box-shadow 0.18s;
+  padding:18px 18px 16px; border-radius:18px;
+  background:rgba(255,255,255,0.75); border:1px solid rgba(255,255,255,0.8);
+  box-shadow:0 4px 20px rgba(15,98,254,0.07);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  position:relative; overflow:hidden; transition:transform 0.18s, box-shadow 0.18s;
 }
-.upcoming-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(15,98,254,0.13); }
-.upcoming-card.today { border-left: 4px solid var(--success); background: rgba(220,252,231,0.45); }
-.upcoming-card.tomorrow { border-left: 4px solid var(--accent); background: rgba(255,249,195,0.45); }
-.upcoming-card.soon { border-left: 4px solid var(--primary); }
-.upcoming-card.later { border-left: 4px solid rgba(107,124,147,0.4); }
+.upcoming-card:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(15,98,254,0.13); }
+.upcoming-card.today { border-left:4px solid var(--success); background:rgba(220,252,231,0.45); }
+.upcoming-card.tomorrow { border-left:4px solid var(--accent); background:rgba(255,249,195,0.45); }
+.upcoming-card.soon { border-left:4px solid var(--primary); }
+.upcoming-card.later { border-left:4px solid rgba(107,124,147,0.4); }
 
-.uc-countdown {
-  position: absolute;
-  top: 14px; right: 16px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-.uc-countdown.now { background: #dcfce7; color: #166534; }
-.uc-countdown.soon { background: #fef9c3; color: #854d0e; }
-.uc-countdown.future { background: #e0f2fe; color: #0369a1; }
-.uc-countdown.later { background: #f3f4f6; color: #374151; }
+.uc-countdown { position:absolute; top:14px; right:16px; font-size:11px; font-weight:800; letter-spacing:0.02em; padding:4px 10px; border-radius:20px; }
+.uc-countdown.now { background:#dcfce7; color:#166534; }
+.uc-countdown.soon { background:#fef9c3; color:#854d0e; }
+.uc-countdown.future { background:#e0f2fe; color:#0369a1; }
+.uc-countdown.later { background:#f3f4f6; color:#374151; }
 
-.uc-name {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--deep);
-  margin-bottom: 4px;
-  padding-right: 80px;
-}
-.uc-service {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 10px;
-}
-.uc-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px 10px;
-}
-.uc-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--deep);
-}
-.uc-meta-item i {
-  font-size: 11px;
-  color: var(--muted);
-  width: 14px;
-  text-align: center;
-}
-.uc-date-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.uc-date-badge {
-  background: rgba(15,98,254,0.1);
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 8px;
-}
-.uc-time-badge {
-  background: rgba(0,0,0,0.05);
-  color: var(--deep);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 8px;
-}
-.upcoming-empty {
-  text-align: center;
-  padding: 32px 20px;
-  color: var(--muted);
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.5);
-  border: 2px dashed rgba(0,0,0,0.08);
-}
+.uc-name { font-size:17px; font-weight:800; color:var(--deep); margin-bottom:4px; padding-right:80px; }
+.uc-service { font-size:12px; font-weight:700; color:var(--primary); margin-bottom:10px; }
+.uc-meta { display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; }
+.uc-meta-item { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--deep); }
+.uc-meta-item i { font-size:11px; color:var(--muted); width:14px; text-align:center; }
+.uc-date-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.uc-date-badge { background:rgba(15,98,254,0.1); color:var(--primary); font-size:12px; font-weight:700; padding:4px 10px; border-radius:8px; }
+.uc-time-badge { background:rgba(0,0,0,0.05); color:var(--deep); font-size:12px; font-weight:700; padding:4px 10px; border-radius:8px; }
+.upcoming-empty { text-align:center; padding:32px 20px; color:var(--muted); font-weight:600; font-size:14px; border-radius:16px; background:rgba(255,255,255,0.5); border:2px dashed rgba(0,0,0,0.08); }
 
 /* STATS */
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:18px; }
@@ -266,65 +161,16 @@ button.btn-small {
 .stat-card .value { font-size:28px; font-weight:800; color:var(--primary); line-height:1.1; }
 .stat-card .sub { font-size:11px; color:var(--muted); margin-top:4px; }
 
-/* ── FIXED BAR CHARTS ─────────────────────────────────────── */
+/* CHARTS */
 .chart-wrap { padding:20px; margin-bottom:16px; }
-.chart-container {
-  height: 180px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  gap: 4px;
-  padding: 0 4px 4px;
-  /* Critical: this is the reference container for % heights */
-  position: relative;
-}
-.bar-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-  /* Fill full height so bars can use % of this */
-  height: 100%;
-  justify-content: flex-end;
-}
-.bar-inner {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1; /* fill available height above label */
-}
-.bar-val {
-  font-size: 9px;
-  color: var(--primary);
-  font-weight: 700;
-  margin-bottom: 2px;
-  text-align: center;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-.bar {
-  width: 80%;
-  max-width: 40px;
-  border-radius: 6px 6px 0 0;
-  transition: height 0.5s ease;
-  min-height: 2px;
-  /* Height set via JS as pixels, not % */
-}
-.bar-label {
-  margin-top: 6px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--muted);
-  flex-shrink: 0;
-}
+.chart-container { height:180px; display:flex; align-items:flex-end; justify-content:space-around; gap:4px; padding:0 4px 4px; position:relative; }
+.bar-wrapper { display:flex; flex-direction:column; align-items:center; flex:1; min-width:0; height:100%; justify-content:flex-end; }
+.bar-inner { width:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; flex:1; }
+.bar-val { font-size:9px; color:var(--primary); font-weight:700; margin-bottom:2px; text-align:center; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.bar { width:80%; max-width:40px; border-radius:6px 6px 0 0; transition:height 0.5s ease; min-height:2px; }
+.bar-label { margin-top:6px; font-size:10px; font-weight:700; color:var(--muted); flex-shrink:0; }
 
-/* TWO-COL GRID */
+/* TWO COL */
 .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
 
 /* TABLES */
@@ -345,27 +191,12 @@ td { vertical-align:middle; }
 .badge.Confirmation { background:#fef9c3; color:#854d0e; }
 .badge.Cancelled { background:#fee2e2; color:#991b1b; }
 .badge.Postponed { background:#f3f4f6; color:#374151; }
-
 .img-preview { height:44px; width:44px; object-fit:cover; border-radius:8px; }
 
 /* MODALS */
-.modal {
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(8,26,56,0.45); backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  display:flex; justify-content:center; align-items:flex-end;
-  z-index:2000; padding:0;
-}
-.modal-content {
-  padding:24px 20px;
-  width:100%; max-width:640px; max-height:92vh; overflow-y:auto;
-  border-radius:24px 24px 0 0;
-  margin:0 auto;
-}
-@media(min-width:640px) {
-  .modal { align-items:center; padding:20px; }
-  .modal-content { border-radius:20px; max-height:88vh; }
-}
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(8,26,56,0.45); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:flex-end; z-index:2000; padding:0; }
+.modal-content { padding:24px 20px; width:100%; max-width:640px; max-height:92vh; overflow-y:auto; border-radius:24px 24px 0 0; margin:0 auto; }
+@media(min-width:640px) { .modal { align-items:center; padding:20px; } .modal-content { border-radius:20px; max-height:88vh; } }
 .modal-content h2 { margin:0 0 20px; font-size:20px; }
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .full-width { grid-column:span 2; }
@@ -379,29 +210,25 @@ td { vertical-align:middle; }
 .method-textarea { width:100%; min-height:130px; resize:vertical; font-size:14px; line-height:1.6; }
 .method-textarea[readonly] { background:rgba(0,0,0,0.02); border:1.5px dashed rgba(0,0,0,0.1); color:var(--muted); }
 
-/* PROGRESS BARS */
+/* PROGRESS */
 .prog-row { margin-bottom:12px; }
 .prog-label { display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px; }
 .prog-track { background:rgba(0,0,0,0.06); border-radius:50px; height:7px; overflow:hidden; }
 .prog-fill { height:100%; border-radius:50px; transition:width 0.5s; }
 
-/* FEED ROWS */
+/* FEED */
 .feed-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(0,0,0,0.05); }
 .feed-row:last-child { border-bottom:none; }
 .feed-row .name { font-weight:600; font-size:13px; }
 .feed-row .sub { font-size:11px; color:var(--muted); margin-top:2px; }
 
 /* SYNC */
-#sync-indicator {
-  position:fixed; bottom:80px; right:16px; z-index:9999;
-  padding:9px 16px; border-radius:50px; font-size:12px;
-  font-weight:600; font-family:Inter,sans-serif;
-  box-shadow:0 4px 14px rgba(0,0,0,0.12);
-  transition:opacity 0.3s ease; display:flex; align-items:center; gap:7px;
-  opacity:0;
-}
+#sync-indicator { position:fixed; bottom:80px; right:16px; z-index:9999; padding:9px 16px; border-radius:50px; font-size:12px; font-weight:600; font-family:Inter,sans-serif; box-shadow:0 4px 14px rgba(0,0,0,0.12); transition:opacity 0.3s ease; display:flex; align-items:center; gap:7px; opacity:0; }
 
-/* MOBILE OVERRIDES */
+/* LOGIN ATTEMPTS UI */
+.login-attempts { font-size:12px; color:var(--danger); font-weight:600; margin-top:8px; display:none; }
+
+/* MOBILE */
 @media(max-width:768px) {
   .nav { display:none; }
   .bottom-nav { display:block; }
@@ -414,22 +241,12 @@ td { vertical-align:middle; }
   .full-width { grid-column:span 1; }
   .section-header h2 { font-size:19px; }
   #sync-indicator { bottom:70px; }
-  .mobile-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 12px 8px;
-    background:rgba(255,255,255,0.92);
-    border-bottom:1px solid rgba(0,0,0,0.06);
-    position:sticky; top:0; z-index:500;
-    backdrop-filter:blur(10px);
-  }
+  .mobile-header { display:flex; align-items:center; justify-content:space-between; padding:14px 12px 8px; background:rgba(255,255,255,0.92); border-bottom:1px solid rgba(0,0,0,0.06); position:sticky; top:0; z-index:500; backdrop-filter:blur(10px); }
   .mobile-header .logo { font-weight:800; font-size:16px; color:var(--deep); display:flex; align-items:center; gap:7px; }
   .mobile-sync-btn { background:none; border:none; color:var(--primary); font-size:18px; cursor:pointer; padding:4px; }
-  .upcoming-cards { grid-template-columns: 1fr; }
-  .uc-meta { grid-template-columns: 1fr 1fr; }
+  .upcoming-cards { grid-template-columns:1fr; }
 }
-@media(min-width:769px) {
-  .mobile-header { display:none; }
-}
+@media(min-width:769px) { .mobile-header { display:none; } }
 </style>
 </head>
 <body>
@@ -440,16 +257,16 @@ td { vertical-align:middle; }
     <h2><img src="logo.png" alt="Logo" style="height:30px;"> CJ Car Washing</h2>
     <p class="auth-notice">Employee verification required</p>
     <div class="field"><label>Username</label><input type="text" id="username" placeholder="James, Charlie, or Zakir" autocomplete="username"></div>
-    <div class="field"><label>Password</label><input type="password" id="password" placeholder="••••••••" autocomplete="current-password"></div>
+    <div class="field"><label>Password</label><input type="password" id="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"></div>
     <button class="btn-primary" onclick="login()">Access Dashboard</button>
-    <p id="login-error" style="color:var(--danger);font-weight:600;display:none;margin-top:12px;">Invalid credentials.</p>
+    <p id="login-error" style="color:var(--danger);font-weight:600;display:none;margin-top:12px;font-size:13px;">Invalid credentials.</p>
+    <p id="lockout-msg" class="login-attempts"></p>
   </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
 
-  <!-- Desktop Nav -->
   <nav class="nav">
     <div class="logo"><img src="logo.png" alt="Logo" style="height:22px;"> CJ Dashboard</div>
     <div class="nav-links">
@@ -461,7 +278,6 @@ td { vertical-align:middle; }
     <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
   </nav>
 
-  <!-- Mobile Header -->
   <div class="mobile-header">
     <div class="logo"><img src="logo.png" alt="Logo" style="height:22px;"> CJ Dashboard</div>
     <button class="mobile-sync-btn" onclick="refreshDashboard()" title="Refresh"><i class="fa-solid fa-rotate"></i></button>
@@ -472,7 +288,6 @@ td { vertical-align:middle; }
     <!-- HOME TAB -->
     <div id="home-tab" class="tab-content">
 
-      <!-- ── UPCOMING BOOKINGS (TOP) ─────────────────────────── -->
       <div class="upcoming-hero">
         <div class="upcoming-hero-header">
           <h2><i class="fa-solid fa-calendar-check" style="color:var(--primary);"></i> Upcoming Bookings <span class="badge-count" id="upcoming-badge-count">0</span></h2>
@@ -481,81 +296,33 @@ td { vertical-align:middle; }
         <div id="upcoming-cards-container"></div>
       </div>
 
-      <!-- ── OVERVIEW CONTROLS ──────────────────────────────── -->
       <div class="section-header">
         <h2>Business Overview</h2>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <select id="time-filter" onchange="updateDashboardStats()" style="padding:8px 10px;border-radius:10px;font-size:13px;border:1.5px solid rgba(0,0,0,0.1);">
-            <option value="Total">All Time</option>
-            <option value="Yearly" selected>This Year</option>
-            <option value="Monthly">This Month</option>
-          </select>
-        </div>
+        <select id="time-filter" onchange="updateDashboardStats()" style="padding:8px 10px;border-radius:10px;font-size:13px;border:1.5px solid rgba(0,0,0,0.1);">
+          <option value="Total">All Time</option>
+          <option value="Yearly" selected>This Year</option>
+          <option value="Monthly">This Month</option>
+        </select>
       </div>
 
-      <!-- KPI CARDS -->
       <div class="stats-grid">
-        <div class="stat-card glass">
-          <h3><i class="fa-solid fa-sterling-sign" style="color:var(--success);"></i> Revenue</h3>
-          <div class="value" id="stat-revenue">£0.00</div>
-          <div class="sub" id="stat-revenue-sub">0 completed</div>
-        </div>
-        <div class="stat-card glass">
-          <h3><i class="fa-solid fa-arrow-trend-down" style="color:var(--danger);"></i> Expenses</h3>
-          <div class="value" id="stat-expenses">£0.00</div>
-          <div class="sub" id="stat-expenses-sub">0 entries</div>
-        </div>
-        <div class="stat-card glass">
-          <h3><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Net Profit</h3>
-          <div class="value" id="stat-profit">£0.00</div>
-          <div class="sub" id="stat-margin">0% margin</div>
-        </div>
-        <div class="stat-card glass">
-          <h3><i class="fa-solid fa-list-check" style="color:var(--accent);"></i> Completed</h3>
-          <div class="value" id="stat-orders">0</div>
-          <div class="sub">orders done</div>
-        </div>
-        <div class="stat-card glass">
-          <h3><i class="fa-solid fa-car" style="color:var(--primary2);"></i> Cars Washed</h3>
-          <div class="value" id="stat-cars">0</div>
-          <div class="sub">total vehicles</div>
-        </div>
-        <div class="stat-card glass">
-          <h3><i class="fa-solid fa-coins" style="color:var(--accent);"></i> Avg Order</h3>
-          <div class="value" id="stat-avg">£0.00</div>
-          <div class="sub">average value</div>
-        </div>
+        <div class="stat-card glass"><h3><i class="fa-solid fa-sterling-sign" style="color:var(--success);"></i> Revenue</h3><div class="value" id="stat-revenue">£0.00</div><div class="sub" id="stat-revenue-sub">0 completed</div></div>
+        <div class="stat-card glass"><h3><i class="fa-solid fa-arrow-trend-down" style="color:var(--danger);"></i> Expenses</h3><div class="value" id="stat-expenses">£0.00</div><div class="sub" id="stat-expenses-sub">0 entries</div></div>
+        <div class="stat-card glass"><h3><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Net Profit</h3><div class="value" id="stat-profit">£0.00</div><div class="sub" id="stat-margin">0% margin</div></div>
+        <div class="stat-card glass"><h3><i class="fa-solid fa-list-check" style="color:var(--accent);"></i> Completed</h3><div class="value" id="stat-orders">0</div><div class="sub">orders done</div></div>
+        <div class="stat-card glass"><h3><i class="fa-solid fa-car" style="color:var(--primary2);"></i> Cars Washed</h3><div class="value" id="stat-cars">0</div><div class="sub">total vehicles</div></div>
+        <div class="stat-card glass"><h3><i class="fa-solid fa-coins" style="color:var(--accent);"></i> Avg Order</h3><div class="value" id="stat-avg">£0.00</div><div class="sub">average value</div></div>
       </div>
 
-      <!-- PIPELINE -->
-      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:18px;" id="pipeline-grid">
-        <div class="stat-card glass" style="background:rgba(254,249,195,0.6);">
-          <h3 style="color:#854d0e;">Confirmation</h3>
-          <div class="value" id="pipe-confirmation" style="color:#854d0e;font-size:26px;">0</div>
-        </div>
-        <div class="stat-card glass" style="background:rgba(224,242,254,0.6);">
-          <h3 style="color:#0369a1;">Confirmed</h3>
-          <div class="value" id="pipe-confirmed" style="color:#0369a1;font-size:26px;">0</div>
-        </div>
-        <div class="stat-card glass" style="background:rgba(220,252,231,0.6);">
-          <h3 style="color:#166534;">Completed</h3>
-          <div class="value" id="pipe-completed" style="color:#166534;font-size:26px;">0</div>
-        </div>
-        <div class="stat-card glass" style="background:rgba(243,244,246,0.6);">
-          <h3 style="color:#374151;">Postponed</h3>
-          <div class="value" id="pipe-postponed" style="color:#374151;font-size:26px;">0</div>
-        </div>
-        <div class="stat-card glass" style="background:rgba(254,226,226,0.6);">
-          <h3 style="color:#991b1b;">Cancelled</h3>
-          <div class="value" id="pipe-cancelled" style="color:#991b1b;font-size:26px;">0</div>
-        </div>
-        <div class="stat-card glass">
-          <h3 style="color:var(--muted);">Total</h3>
-          <div class="value" id="pipe-total" style="font-size:26px;">0</div>
-        </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:18px;">
+        <div class="stat-card glass" style="background:rgba(254,249,195,0.6);"><h3 style="color:#854d0e;">Confirmation</h3><div class="value" id="pipe-confirmation" style="color:#854d0e;font-size:26px;">0</div></div>
+        <div class="stat-card glass" style="background:rgba(224,242,254,0.6);"><h3 style="color:#0369a1;">Confirmed</h3><div class="value" id="pipe-confirmed" style="color:#0369a1;font-size:26px;">0</div></div>
+        <div class="stat-card glass" style="background:rgba(220,252,231,0.6);"><h3 style="color:#166534;">Completed</h3><div class="value" id="pipe-completed" style="color:#166534;font-size:26px;">0</div></div>
+        <div class="stat-card glass" style="background:rgba(243,244,246,0.6);"><h3 style="color:#374151;">Postponed</h3><div class="value" id="pipe-postponed" style="color:#374151;font-size:26px;">0</div></div>
+        <div class="stat-card glass" style="background:rgba(254,226,226,0.6);"><h3 style="color:#991b1b;">Cancelled</h3><div class="value" id="pipe-cancelled" style="color:#991b1b;font-size:26px;">0</div></div>
+        <div class="stat-card glass"><h3 style="color:var(--muted);">Total</h3><div class="value" id="pipe-total" style="font-size:26px;">0</div></div>
       </div>
 
-      <!-- CHARTS ROW -->
       <div class="two-col">
         <div class="chart-wrap glass" style="margin:0;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
@@ -579,35 +346,17 @@ td { vertical-align:middle; }
         </div>
       </div>
 
-      <!-- BREAKDOWN -->
       <div class="two-col">
-        <div class="chart-wrap glass" style="margin:0;padding:18px;">
-          <h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">By Service</h3>
-          <div id="service-breakdown"></div>
-        </div>
-        <div class="chart-wrap glass" style="margin:0;padding:18px;">
-          <h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">By Village</h3>
-          <div id="village-breakdown"></div>
-        </div>
+        <div class="chart-wrap glass" style="margin:0;padding:18px;"><h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">By Service</h3><div id="service-breakdown"></div></div>
+        <div class="chart-wrap glass" style="margin:0;padding:18px;"><h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">By Village</h3><div id="village-breakdown"></div></div>
       </div>
 
-      <!-- RECENT + COSTS -->
       <div class="two-col">
-        <div class="chart-wrap glass" style="margin:0;padding:18px;">
-          <h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">Recent Orders</h3>
-          <div id="recent-orders-list"></div>
-        </div>
-        <div class="chart-wrap glass" style="margin:0;padding:18px;">
-          <h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">Top Expenses</h3>
-          <div id="top-costs-list"></div>
-        </div>
+        <div class="chart-wrap glass" style="margin:0;padding:18px;"><h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">Recent Orders</h3><div id="recent-orders-list"></div></div>
+        <div class="chart-wrap glass" style="margin:0;padding:18px;"><h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">Top Expenses</h3><div id="top-costs-list"></div></div>
       </div>
 
-      <!-- MONTHLY TABLE -->
-      <div class="chart-wrap glass" style="padding:18px;">
-        <h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">Monthly Breakdown</h3>
-        <div id="monthly-table" style="overflow-x:auto;"></div>
-      </div>
+      <div class="chart-wrap glass" style="padding:18px;"><h3 style="margin:0 0 14px;font-size:14px;font-weight:700;">Monthly Breakdown</h3><div id="monthly-table" style="overflow-x:auto;"></div></div>
 
     </div>
 
@@ -670,52 +419,32 @@ td { vertical-align:middle; }
     <div id="method-tab" class="tab-content hidden">
       <div class="section-header"><h2>CJ Method &amp; Resources</h2></div>
       <div class="method-box glass">
-        <div class="method-header">
-          <h3>The CJ Way</h3>
-          <button class="btn-small btn-edit" onclick="toggleMethodEdit('cj-way-text')"><i class="fa-solid fa-pen"></i></button>
-        </div>
+        <div class="method-header"><h3>The CJ Way</h3><button class="btn-small btn-edit" onclick="toggleMethodEdit('cj-way-text')"><i class="fa-solid fa-pen"></i></button></div>
         <textarea id="cj-way-text" class="method-textarea" placeholder="Enter The CJ Way details here..." readonly onblur="saveMethodsData()"></textarea>
       </div>
       <div class="method-box glass">
-        <div class="method-header">
-          <h3>The CJ Method</h3>
-          <button class="btn-small btn-edit" onclick="toggleMethodEdit('cj-method-text')"><i class="fa-solid fa-pen"></i></button>
-        </div>
+        <div class="method-header"><h3>The CJ Method</h3><button class="btn-small btn-edit" onclick="toggleMethodEdit('cj-method-text')"><i class="fa-solid fa-pen"></i></button></div>
         <textarea id="cj-method-text" class="method-textarea" placeholder="Enter The CJ Method details here..." readonly onblur="saveMethodsData()"></textarea>
       </div>
       <div class="method-box glass">
-        <div class="method-header">
-          <h3>The CJ Resources</h3>
-          <button class="btn-small btn-edit" onclick="toggleMethodEdit('cj-resources-text')"><i class="fa-solid fa-pen"></i></button>
-        </div>
+        <div class="method-header"><h3>The CJ Resources</h3><button class="btn-small btn-edit" onclick="toggleMethodEdit('cj-resources-text')"><i class="fa-solid fa-pen"></i></button></div>
         <textarea id="cj-resources-text" class="method-textarea" placeholder="Enter The CJ Resources details here..." readonly onblur="saveMethodsData()"></textarea>
       </div>
     </div>
 
-  </div><!-- /container -->
+  </div>
 
-  <!-- Bottom Nav (mobile) -->
   <nav class="bottom-nav">
     <div class="bottom-nav-inner">
-      <button class="bnav-item active" id="bnav-home" onclick="switchTab('home',this,'bnav')">
-        <i class="fa-solid fa-chart-pie"></i><span>Home</span>
-      </button>
-      <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders',this,'bnav')">
-        <i class="fa-solid fa-list-check"></i><span>Orders</span>
-      </button>
-      <button class="bnav-item" id="bnav-finance" onclick="switchTab('finance',this,'bnav')">
-        <i class="fa-solid fa-pound-sign"></i><span>Finance</span>
-      </button>
-      <button class="bnav-item" id="bnav-method" onclick="switchTab('method',this,'bnav')">
-        <i class="fa-solid fa-wrench"></i><span>Method</span>
-      </button>
-      <button class="bnav-item" onclick="logout()" style="color:var(--danger);">
-        <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
-      </button>
+      <button class="bnav-item active" id="bnav-home" onclick="switchTab('home',this,'bnav')"><i class="fa-solid fa-chart-pie"></i><span>Home</span></button>
+      <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders',this,'bnav')"><i class="fa-solid fa-list-check"></i><span>Orders</span></button>
+      <button class="bnav-item" id="bnav-finance" onclick="switchTab('finance',this,'bnav')"><i class="fa-solid fa-pound-sign"></i><span>Finance</span></button>
+      <button class="bnav-item" id="bnav-method" onclick="switchTab('method',this,'bnav')"><i class="fa-solid fa-wrench"></i><span>Method</span></button>
+      <button class="bnav-item" onclick="logout()" style="color:var(--danger);"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
     </div>
   </nav>
 
-</div><!-- /dashboard -->
+</div>
 
 <!-- ORDER MODAL -->
 <div id="order-modal" class="modal hidden">
@@ -727,15 +456,13 @@ td { vertical-align:middle; }
         <div class="field"><label>Customer Name *</label><input type="text" id="o-name" required autocomplete="off"></div>
         <div class="field"><label>Phone *</label><input type="tel" id="o-phone" required autocomplete="off"></div>
         <div class="field full-width"><label>Address</label><input type="text" id="o-address" autocomplete="off"></div>
-        <div class="field">
-          <label>Village *</label>
+        <div class="field"><label>Village *</label>
           <select id="o-village" required>
             <option>Bishopthorpe</option><option>Acaster Malbis</option>
             <option>Fulford</option><option>Escrick</option>
           </select>
         </div>
-        <div class="field">
-          <label>Service *</label>
+        <div class="field"><label>Service *</label>
           <select id="o-service" required>
             <option>Outside Wash</option><option>Inside &amp; Outside</option>
             <option>Inside Clean</option><option>Other</option>
@@ -744,8 +471,7 @@ td { vertical-align:middle; }
         <div class="field"><label>Date</label><input type="date" id="o-date"></div>
         <div class="field"><label>Time</label><input type="time" id="o-time"></div>
         <div class="field"><label>Cars *</label><input type="number" id="o-cars" min="1" value="1" required></div>
-        <div class="field">
-          <label>Status *</label>
+        <div class="field"><label>Status *</label>
           <select id="o-status">
             <option>Confirmation</option><option>Confirmed</option>
             <option>Postponed</option><option>Cancelled</option><option>Completed</option>
@@ -785,26 +511,122 @@ td { vertical-align:middle; }
   </div>
 </div>
 
-<!-- SYNC INDICATOR -->
 <div id="sync-indicator"></div>
 
 <script>
-const SHEETS_API = 'https://script.google.com/macros/s/AKfycbyPksR14X1cad3idTfktb0OW-AGI1O6kVAdPrLNZUqyOtNlB4Y1P_6j3uj6BfBJoal_2A/exec';
+// ══════════════════════════════════════════════════════════
+// SECURE LOGIN
+// Passwords are hashed with FNV-1a so plain text never sits
+// in the source. To change the password, open the browser
+// console and run:  fnv1a('yournewpassword')
+// Then paste the result into CREDENTIALS below.
+// ══════════════════════════════════════════════════════════
+function fnv1a(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16);
+}
+
+// To regenerate: open console, run fnv1a('yournewpassword')
+const CREDENTIALS = {
+  james:   "ce52316d",
+  charlie: "10b9dfcb",
+  zakir:   "d075b9b2"
+};
+
+// Brute-force lockout — 5 wrong attempts locks for 5 minutes
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS   = 5 * 60 * 1000;
+
+function getLockoutState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('cj_lockout') || '{}');
+    return { attempts: s.attempts || 0, lockedUntil: s.lockedUntil || 0 };
+  } catch { return { attempts: 0, lockedUntil: 0 }; }
+}
+
+function setLockoutState(state) {
+  localStorage.setItem('cj_lockout', JSON.stringify(state));
+}
+
+function clearLockoutState() {
+  localStorage.removeItem('cj_lockout');
+}
+
+function login() {
+  const lockout = getLockoutState();
+  const now = Date.now();
+  const errEl = document.getElementById('login-error');
+  const lockEl = document.getElementById('lockout-msg');
+
+  // Check if locked out
+  if (lockout.lockedUntil > now) {
+    const secsLeft = Math.ceil((lockout.lockedUntil - now) / 1000);
+    const minsLeft = Math.ceil(secsLeft / 60);
+    errEl.style.display = 'none';
+    lockEl.style.display = 'block';
+    lockEl.textContent = `Too many failed attempts. Try again in ${minsLeft} minute${minsLeft !== 1 ? 's' : ''}.`;
+    return;
+  }
+
+  const user = document.getElementById('username').value.trim().toLowerCase();
+  const pass = document.getElementById('password').value;
+  const hash = fnv1a(pass);
+
+  if (CREDENTIALS[user] && hash === CREDENTIALS[user]) {
+    clearLockoutState();
+    lockEl.style.display = 'none';
+    errEl.style.display = 'none';
+    localStorage.setItem('cj_logged_in', 'true');
+    initDashboard();
+  } else {
+    const newAttempts = lockout.attempts + 1;
+    const remaining = MAX_ATTEMPTS - newAttempts;
+
+    if (newAttempts >= MAX_ATTEMPTS) {
+      setLockoutState({ attempts: newAttempts, lockedUntil: now + LOCKOUT_MS });
+      errEl.style.display = 'none';
+      lockEl.style.display = 'block';
+      lockEl.textContent = 'Too many failed attempts. Locked for 5 minutes.';
+    } else {
+      setLockoutState({ attempts: newAttempts, lockedUntil: 0 });
+      lockEl.style.display = 'none';
+      errEl.style.display = 'block';
+      errEl.textContent = remaining === 1
+        ? 'Invalid credentials. 1 attempt remaining before lockout.'
+        : `Invalid credentials. ${remaining} attempts remaining.`;
+    }
+  }
+}
+
+function logout() {
+  localStorage.removeItem('cj_logged_in');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('password').value = '';
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+}
+
+if (localStorage.getItem('cj_logged_in') === 'true') initDashboard();
+
+// ══════════════════════════════════════════════════════════
+// SHEETS + DATA
+// ══════════════════════════════════════════════════════════
+const SHEETS_API = 'https://script.google.com/macros/s/AKfycbxBHbsTZloI8XyHfYO-s3ivH17Tgnjnlyu9k6QJUD9btfqHEF4tndzxjwf6I7dh7Poogg/exec';
 let orders = [], costs = [], methodsData = { way:'', method:'', resources:'' };
 let countdownTimer = null;
 
-// ── TIME HELPER ────────────────────────────────────────────
-// Google Sheets returns times as 1899-12-30THH:MM:SS.000Z — extract HH:MM only
 function parseSheetTime(val) {
   if (!val) return '';
   const s = String(val);
   if (/^\d{1,2}:\d{2}/.test(s)) return s.substring(0, 5);
   const m = s.match(/T(\d{2}:\d{2})/);
-  if (m) return m[1];
-  return '';
+  return m ? m[1] : '';
 }
 
-// ── SYNC INDICATOR ─────────────────────────────────────────
 function showSync(state, msg) {
   const el = document.getElementById('sync-indicator');
   if (state === 'syncing') {
@@ -812,20 +634,19 @@ function showSync(state, msg) {
     el.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> Syncing...';
   } else if (state === 'ok') {
     el.style.cssText += 'background:#dcfce7;color:#166534;opacity:1;';
-    el.innerHTML = '<i class="fa-solid fa-check"></i> ' + (msg||'Saved');
-    setTimeout(()=>{ el.style.opacity='0'; }, 2500);
+    el.innerHTML = '<i class="fa-solid fa-check"></i> ' + (msg || 'Saved');
+    setTimeout(() => { el.style.opacity = '0'; }, 2500);
   } else if (state === 'error') {
     el.style.cssText += 'background:#fee2e2;color:#991b1b;opacity:1;';
-    el.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ' + (msg||'Sync failed');
-    setTimeout(()=>{ el.style.opacity='0'; }, 4000);
-  } else { el.style.opacity='0'; }
+    el.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ' + (msg || 'Sync failed');
+    setTimeout(() => { el.style.opacity = '0'; }, 4000);
+  } else { el.style.opacity = '0'; }
 }
 
-// ── SHEETS API ─────────────────────────────────────────────
 async function sheetsPost(payload) {
-  const r = await fetch(SHEETS_API, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(payload) });
+  const r = await fetch(SHEETS_API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
   const j = await r.json();
-  if (j.status !== 'success') throw new Error(j.message||'Error');
+  if (j.status !== 'success') throw new Error(j.message || 'Error');
   return j;
 }
 
@@ -835,104 +656,62 @@ async function loadAll() {
     const r = await fetch(SHEETS_API + '?action=getAll');
     const data = await r.json();
 
-    orders = (data.Orders||[]).map(row => ({
+    orders = (data.Orders || []).map(row => ({
       id: row.id ? Number(row.id) : Date.now(),
-      name: row.name||'', phone: row.phone||'',
-      address: row.address||'', village: row.village||'',
-      service: row.service||'', date: row.date||'',
-      time: parseSheetTime(row.time), cars: row.cars||1,
-      status: row.status||'Confirmation',
+      name: row.name || '', phone: row.phone || '',
+      address: row.address || '', village: row.village || '',
+      service: row.service || '', date: row.date || '',
+      time: parseSheetTime(row.time), cars: row.cars || 1,
+      status: row.status || 'Confirmation',
       paid: row.paid ? parseFloat(row.paid) : 0,
-      details: row.details||''
+      details: row.details || ''
     }));
 
-    costs = (data.Costs||[]).map(row => ({
+    costs = (data.Costs || []).map(row => ({
       id: row.id ? Number(row.id) : Date.now(),
-      name: row.name||'', desc: row.desc||'',
-      date: row.date||'',
+      name: row.name || '', desc: row.desc || '',
+      date: row.date || '',
       cost: row.cost ? parseFloat(row.cost) : 0,
       litre: row.litre ? parseFloat(row.litre) : null,
-      link: row.link||'', img: row.img||''
+      link: row.link || '', img: row.img || ''
     }));
 
-    methodsData = { way:'', method:'', resources:'' };
-    (data.Methods||[]).forEach(row => {
-      if (row.type==='way') methodsData.way = row.content||'';
-      if (row.type==='method') methodsData.method = row.content||'';
-      if (row.type==='resources') methodsData.resources = row.content||'';
+    methodsData = { way: '', method: '', resources: '' };
+    (data.Methods || []).forEach(row => {
+      if (row.type === 'way') methodsData.way = row.content || '';
+      if (row.type === 'method') methodsData.method = row.content || '';
+      if (row.type === 'resources') methodsData.resources = row.content || '';
     });
 
-    showSync('ok','Loaded');
+    showSync('ok', 'Loaded');
     return true;
-  } catch(e) {
+  } catch (e) {
     console.error(e);
-    showSync('error','Could not load data');
+    showSync('error', 'Could not load data');
     return false;
   }
 }
 
 async function saveOrderToSheets(o) {
-  return sheetsPost({ action:'upsert', sheet:'Orders', idField:'id', row:{
-    id:o.id, name:o.name, phone:o.phone, address:o.address,
-    village:o.village, service:o.service, date:o.date, time:o.time,
-    cars:o.cars, status:o.status, paid:o.paid
-  }});
+  return sheetsPost({ action: 'upsert', sheet: 'Orders', idField: 'id', row: { id: o.id, name: o.name, phone: o.phone, address: o.address, village: o.village, service: o.service, date: o.date, time: o.time, cars: o.cars, status: o.status, paid: o.paid } });
 }
-
 async function saveCostToSheets(c) {
-  return sheetsPost({ action:'upsert', sheet:'Costs', idField:'id', row:{
-    id:c.id, name:c.name, desc:c.desc, date:c.date,
-    cost:c.cost, litre:c.litre||'', link:c.link, img:c.img
-  }});
+  return sheetsPost({ action: 'upsert', sheet: 'Costs', idField: 'id', row: { id: c.id, name: c.name, desc: c.desc, date: c.date, cost: c.cost, litre: c.litre || '', link: c.link, img: c.img } });
 }
-
 async function deleteFromSheets(sheet, id) {
-  return sheetsPost({ action:'delete', sheet, idField:'id', id });
+  return sheetsPost({ action: 'delete', sheet, idField: 'id', id });
 }
-
 async function saveMethodsToSheets() {
-  return sheetsPost({ action:'setMethods', sheet:'Methods', rows:[
-    {type:'way', content:methodsData.way},
-    {type:'method', content:methodsData.method},
-    {type:'resources', content:methodsData.resources}
+  return sheetsPost({ action: 'setMethods', sheet: 'Methods', rows: [
+    { type: 'way', content: methodsData.way },
+    { type: 'method', content: methodsData.method },
+    { type: 'resources', content: methodsData.resources }
   ]});
 }
 
-// ── AUTH ───────────────────────────────────────────────────
-// Passwords stored as SHA-256 hashes — run getHash('yourpassword') in console to generate new ones
-const CREDENTIALS = {
-  james:   'ed4add38 ',
-  charlie: 'ed4add38',
-  zakir:   'ed4add38'
-};
-
-async function getHash(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-if (localStorage.getItem('cj_logged_in')==='true') initDashboard();
-
-async function login() {
-  const user = document.getElementById('username').value.trim().toLowerCase();
-  const pass = document.getElementById('password').value;
-  const hash = await getHash(pass);
-  if (CREDENTIALS[user] && hash === CREDENTIALS[user]) {
-    localStorage.setItem('cj_logged_in','true');
-    initDashboard();
-  } else {
-    document.getElementById('login-error').style.display='block';
-  }
-}
-
-function logout() {
-  localStorage.removeItem('cj_logged_in');
-  document.getElementById('dashboard').classList.add('hidden');
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('password').value='';
-  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
-}
-
+// ══════════════════════════════════════════════════════════
+// INIT + NAV
+// ══════════════════════════════════════════════════════════
 async function initDashboard() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
@@ -946,155 +725,172 @@ async function refreshDashboard() {
   renderOrders(); renderCosts(); updateDashboardStats(); loadMethodsData();
 }
 
-// ── NAV ────────────────────────────────────────────────────
 let currentTab = 'home';
 function switchTab(tabId, el, navType) {
   currentTab = tabId;
   document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-  document.getElementById(tabId+'-tab').classList.remove('hidden');
+  document.getElementById(tabId + '-tab').classList.remove('hidden');
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
   if (navType === 'bnav') {
     el.classList.add('active');
+    const map = { home: 0, orders: 1, finance: 2, method: 3 };
     const desktopLinks = document.querySelectorAll('.nav-links a');
-    const map = {home:0,orders:1,finance:2,method:3};
-    if(map[tabId]!==undefined) desktopLinks[map[tabId]].classList.add('active');
+    if (map[tabId] !== undefined) desktopLinks[map[tabId]].classList.add('active');
   } else if (el) {
     el.classList.add('active');
-    const bn = document.getElementById('bnav-'+tabId);
-    if(bn) bn.classList.add('active');
+    const bn = document.getElementById('bnav-' + tabId);
+    if (bn) bn.classList.add('active');
   }
 }
 
-// ── MODALS ─────────────────────────────────────────────────
-function openModal(id, isNew=false) {
+function openModal(id, isNew = false) {
   document.getElementById(id).classList.remove('hidden');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
   if (!isNew) return;
-  if (id==='order-modal') {
+  if (id === 'order-modal') {
     document.getElementById('order-form').reset();
-    document.getElementById('o-id').value='';
-    document.getElementById('order-modal-title').innerText='Add Order';
+    document.getElementById('o-id').value = '';
+    document.getElementById('order-modal-title').innerText = 'Add Order';
   }
-  if (id==='cost-modal') {
+  if (id === 'cost-modal') {
     document.getElementById('cost-form').reset();
-    document.getElementById('c-id').value='';
-    document.getElementById('c-date').valueAsDate=new Date();
-    document.getElementById('cost-modal-title').innerText='Add Cost';
+    document.getElementById('c-id').value = '';
+    document.getElementById('c-date').valueAsDate = new Date();
+    document.getElementById('cost-modal-title').innerText = 'Add Cost';
   }
 }
 function closeModal(id) {
   document.getElementById(id).classList.add('hidden');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
 }
 document.querySelectorAll('.modal').forEach(m => {
-  m.addEventListener('click', e => { if(e.target===m) closeModal(m.id); });
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); });
 });
 
 function toggleMethodEdit(id) {
   const ta = document.getElementById(id);
   if (ta.hasAttribute('readonly')) { ta.removeAttribute('readonly'); ta.focus(); }
-  else { ta.setAttribute('readonly','true'); saveMethodsData(); }
+  else { ta.setAttribute('readonly', 'true'); saveMethodsData(); }
 }
 
-// ── UPCOMING BOOKINGS HERO ─────────────────────────────────
-function cleanDate(dateStr) {
-  if (!dateStr) return '';
-  const s = String(dateStr);
+// ══════════════════════════════════════════════════════════
+// DATE / TIME HELPERS — fully local timezone, no UTC shift
+// ══════════════════════════════════════════════════════════
+
+// Extract clean YYYY-MM-DD from whatever Google Sheets sends
+function cleanDate(val) {
+  if (!val) return '';
+  const s = String(val);
   const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
-  return m ? m[1] : s;
+  return m ? m[1] : '';
 }
 
-// Always builds a LOCAL timezone Date — avoids UTC offset shifting
-function makeLocalDate(dateStr, timeStr) {
+// Build a LOCAL Date object — never uses UTC parsing
+// This is the single source of truth for all date comparisons
+function toLocalDate(dateStr, timeStr) {
   const d = cleanDate(dateStr);
   if (!d) return null;
   const [y, mo, day] = d.split('-').map(Number);
-  if (timeStr && /^\d{1,2}:\d{2}/.test(timeStr)) {
-    const [h, min] = timeStr.split(':').map(Number);
-    return new Date(y, mo - 1, day, h, min, 0);
+  if (timeStr && /^\d{1,2}:\d{2}/.test(String(timeStr))) {
+    const [h, min] = String(timeStr).split(':').map(Number);
+    return new Date(y, mo - 1, day, h, min, 0, 0);
   }
-  return new Date(y, mo - 1, day, 12, 0, 0); // noon fallback
+  // No time — use noon so "today" comparisons don't edge-case at midnight
+  return new Date(y, mo - 1, day, 12, 0, 0, 0);
 }
 
-function getCountdownText(dateStr, timeStr) {
-  const now = new Date();
-  const target = makeLocalDate(dateStr, timeStr);
+// Returns today's date at midnight, local time
+function todayMidnight() {
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0, 0);
+}
 
+// Human-friendly countdown string + CSS class
+// Strategy: compare calendar DAYS (not 86400-second chunks)
+// so "Sunday" always says "In 3 days" on Thursday, regardless of time
+function getCountdown(dateStr, timeStr) {
+  const target = toLocalDate(dateStr, timeStr);
   if (!target || isNaN(target)) return { text: 'No date', cls: 'later' };
 
-  const diffMs = target - now;
-  const diffMins = Math.round(diffMs / 60000);
-  const diffHours = diffMs / 3600000;
-  const diffDays = diffMs / 86400000;
+  const now      = new Date();
+  const today    = todayMidnight();
+  const tgtDay   = new Date(target.getFullYear(), target.getMonth(), target.getDate(), 0, 0, 0, 0);
+  const dayDiff  = Math.round((tgtDay - today) / 86400000); // whole calendar days
 
-  if (diffMs < 0) {
-    // past
-    const absMins = Math.abs(diffMins);
-    if (absMins < 60) return { text: `${absMins}m ago`, cls: 'now' };
-    const absHours = Math.round(Math.abs(diffHours));
-    if (absHours < 24) return { text: `${absHours}h ago`, cls: 'now' };
-    return { text: `${Math.round(Math.abs(diffDays))}d ago`, cls: 'later' };
+  if (dayDiff < 0) {
+    // Past
+    const absDays = Math.abs(dayDiff);
+    if (absDays === 0) return { text: 'Today', cls: 'now' };
+    if (absDays === 1) return { text: 'Yesterday', cls: 'later' };
+    return { text: `${absDays}d ago`, cls: 'later' };
   }
 
-  if (diffMins < 60) {
-    // less than 1 hour away — show minutes
-    return { text: `In ${diffMins}m`, cls: 'now' };
-  } else if (diffHours < 24) {
-    // less than 24 hours — show hours + mins
-    const h = Math.floor(diffHours);
-    const m = Math.round((diffHours - h) * 60);
-    return { text: m > 0 ? `In ${h}h ${m}m` : `In ${h}h`, cls: 'soon' };
-  } else if (diffDays < 2) {
-    return { text: 'Tomorrow', cls: 'soon' };
-  } else if (diffDays < 7) {
-    return { text: `In ${Math.round(diffDays)}d`, cls: 'future' };
-  } else {
-    return { text: `In ${Math.round(diffDays)}d`, cls: 'later' };
+  if (dayDiff === 0) {
+    // Today — show hours/minutes remaining
+    const diffMs   = target - now;
+    const diffMins = Math.round(diffMs / 60000);
+    if (diffMins <= 0)  return { text: 'Now', cls: 'now' };
+    if (diffMins < 60)  return { text: `In ${diffMins}m`, cls: 'now' };
+    const h = Math.floor(diffMins / 60);
+    const m = diffMins % 60;
+    return { text: m > 0 ? `In ${h}h ${m}m` : `In ${h}h`, cls: 'now' };
   }
+
+  if (dayDiff === 1) return { text: 'Tomorrow', cls: 'soon' };
+  if (dayDiff < 7)   return { text: `In ${dayDiff} days`, cls: 'future' };
+  if (dayDiff < 14)  return { text: `In ${dayDiff} days`, cls: 'future' };
+  const weeks = Math.round(dayDiff / 7);
+  return { text: `In ${weeks} week${weeks !== 1 ? 's' : ''}`, cls: 'later' };
 }
 
 function getCardClass(dateStr, timeStr) {
-  const now = new Date();
-  const target = makeLocalDate(dateStr, timeStr);
+  const target = toLocalDate(dateStr, timeStr);
   if (!target || isNaN(target)) return 'later';
-  const diffMs = target - now;
-  const diffHours = diffMs / 3600000;
-  const diffDays = diffMs / 86400000;
-  if (diffHours < 24 && diffDays >= 0) return 'today';
-  if (diffDays >= 0 && diffDays < 2) return 'tomorrow';
-  if (diffDays < 7) return 'soon';
+  const today   = todayMidnight();
+  const tgtDay  = new Date(target.getFullYear(), target.getMonth(), target.getDate(), 0, 0, 0, 0);
+  const dayDiff = Math.round((tgtDay - today) / 86400000);
+  if (dayDiff === 0) return 'today';
+  if (dayDiff === 1) return 'tomorrow';
+  if (dayDiff < 7)   return 'soon';
   return 'later';
 }
 
+// Format date as "Sun 6 Jul" using local parsing — never bare new Date(str)
 function formatDateNice(dateStr) {
   if (!dateStr) return 'Date TBD';
-  const clean = cleanDate(dateStr);
-  if (!clean) return dateStr;
-  const [y, mo, day] = clean.split('-').map(Number);
-  const d = new Date(y, mo - 1, day);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+  const d = cleanDate(dateStr);
+  if (!d) return String(dateStr);
+  const [y, mo, day] = d.split('-').map(Number);
+  const dt = new Date(y, mo - 1, day);
+  if (isNaN(dt)) return String(dateStr);
+  return dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
+// ══════════════════════════════════════════════════════════
+// UPCOMING CARDS
+// ══════════════════════════════════════════════════════════
 function renderUpcomingCards() {
   const container = document.getElementById('upcoming-cards-container');
-  const badge = document.getElementById('upcoming-badge-count');
+  const badge     = document.getElementById('upcoming-badge-count');
   if (!container) return;
 
-  const now = new Date();
-  // Show upcoming Confirmation + Confirmed orders with a date today or future
+  const today = todayMidnight();
+
   const list = orders
-    .filter(o => ['Confirmation','Confirmed'].includes(o.status) && o.date)
+    .filter(o => ['Confirmation', 'Confirmed'].includes(o.status) && o.date)
     .filter(o => {
-      const clean = cleanDate(o.date);
-      if (!clean) return false;
-      const [y, mo, day] = clean.split('-').map(Number);
-      const d = new Date(y, mo - 1, day);
-      const today = new Date(); today.setHours(0,0,0,0);
-      return d >= today;
+      const d = cleanDate(o.date);
+      if (!d) return false;
+      const [y, mo, day] = d.split('-').map(Number);
+      const tgtDay = new Date(y, mo - 1, day, 0, 0, 0, 0);
+      return tgtDay >= today;
     })
-    .sort((a,b) => (makeLocalDate(a.date, a.time) || 0) - (makeLocalDate(b.date, b.time) || 0));
+    .sort((a, b) => {
+      const da = toLocalDate(a.date, a.time);
+      const db = toLocalDate(b.date, b.time);
+      return (da || 0) - (db || 0);
+    });
 
   if (badge) badge.textContent = list.length;
 
@@ -1104,12 +900,11 @@ function renderUpcomingCards() {
   }
 
   container.innerHTML = `<div class="upcoming-cards">${list.map(o => {
-    const countdown = getCountdownText(o.date, o.time);
+    const countdown = getCountdown(o.date, o.time);
     const cardClass = getCardClass(o.date, o.time);
-    const dateNice = formatDateNice(o.date);
-    const timeNice = o.time || 'Time TBD';
-    const cars = parseInt(o.cars) || 1;
-
+    const dateNice  = formatDateNice(o.date);
+    const timeNice  = o.time || 'Time TBD';
+    const cars      = parseInt(o.cars) || 1;
     return `<div class="upcoming-card ${cardClass}">
       <div class="uc-countdown ${countdown.cls}">${countdown.text}</div>
       <div class="uc-name">${o.name}</div>
@@ -1122,31 +917,27 @@ function renderUpcomingCards() {
         <div class="uc-meta-item"><i class="fa-solid fa-location-dot"></i>${o.village}</div>
         <div class="uc-meta-item"><i class="fa-solid fa-car"></i>${cars} car${cars !== 1 ? 's' : ''}</div>
         <div class="uc-meta-item"><i class="fa-solid fa-map-marker-alt"></i>${o.address || 'Address TBD'}</div>
-        <div class="uc-meta-item">
-          <i class="fa-solid fa-circle-check"></i>
-          <span class="badge ${o.status}" style="font-size:10px;padding:2px 7px;">${o.status}</span>
-        </div>
+        <div class="uc-meta-item"><i class="fa-solid fa-circle-check"></i><span class="badge ${o.status}" style="font-size:10px;padding:2px 7px;">${o.status}</span></div>
       </div>
     </div>`;
   }).join('')}</div>`;
 }
 
-// Live countdown — updates every 30 seconds
 function startCountdownTimer() {
   if (countdownTimer) clearInterval(countdownTimer);
   countdownTimer = setInterval(() => {
-    if (currentTab === 'home') {
-      renderUpcomingCards();
-    }
+    if (currentTab === 'home') renderUpcomingCards();
   }, 30000);
 }
 
-// ── ORDERS ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// ORDERS
+// ══════════════════════════════════════════════════════════
 async function saveOrder(e) {
   e.preventDefault();
   const id = document.getElementById('o-id').value;
   const od = {
-    id: id ? parseInt(id) : Date.now(),
+    id:      id ? parseInt(id) : Date.now(),
     name:    document.getElementById('o-name').value,
     phone:   document.getElementById('o-phone').value,
     address: document.getElementById('o-address').value,
@@ -1156,23 +947,23 @@ async function saveOrder(e) {
     time:    document.getElementById('o-time').value,
     cars:    document.getElementById('o-cars').value,
     status:  document.getElementById('o-status').value,
-    paid:    parseFloat(document.getElementById('o-paid').value)||0,
+    paid:    parseFloat(document.getElementById('o-paid').value) || 0,
     details: document.getElementById('o-details').value
   };
-  if (id) { const i=orders.findIndex(o=>o.id==id); orders[i]=od; }
+  if (id) { const i = orders.findIndex(o => o.id == id); orders[i] = od; }
   else orders.push(od);
   closeModal('order-modal');
   renderOrders(); updateDashboardStats();
   showSync('syncing');
-  try { await saveOrderToSheets(od); showSync('ok','Order saved'); }
-  catch(err) { showSync('error','Save failed'); console.error(err); }
+  try { await saveOrderToSheets(od); showSync('ok', 'Order saved'); }
+  catch (err) { showSync('error', 'Save failed'); console.error(err); }
 }
 
 function editOrder(id) {
-  const o = orders.find(o=>o.id===id); if(!o) return;
+  const o = orders.find(o => o.id === id); if (!o) return;
   ['id','name','phone','address','village','service','date','time','cars','status','paid','details']
-    .forEach(k => { const el=document.getElementById('o-'+k); if(el) el.value=o[k]||''; });
-  document.getElementById('order-modal-title').innerText='Edit Order';
+    .forEach(k => { const el = document.getElementById('o-' + k); if (el) el.value = o[k] || ''; });
+  document.getElementById('order-modal-title').innerText = 'Edit Order';
   openModal('order-modal');
 }
 
@@ -1181,31 +972,31 @@ async function deleteOrder(id) {
   orders = orders.filter(o => o.id !== id);
   renderOrders(); updateDashboardStats();
   showSync('syncing');
-  try { await deleteFromSheets('Orders', id); showSync('ok','Order deleted'); }
-  catch(err) { showSync('error','Delete failed'); console.error(err); }
+  try { await deleteFromSheets('Orders', id); showSync('ok', 'Order deleted'); }
+  catch (err) { showSync('error', 'Delete failed'); console.error(err); }
 }
 
 function renderOrders() {
   const tbody = document.getElementById('orders-tbody');
   if (!tbody) return;
-  tbody.innerHTML='';
-  const statuses = Array.from(document.querySelectorAll('#status-filters input:checked')).map(c=>c.value);
-  const village = document.getElementById('filter-village').value;
-  const service = document.getElementById('filter-service').value;
+  tbody.innerHTML = '';
+  const statuses = Array.from(document.querySelectorAll('#status-filters input:checked')).map(c => c.value);
+  const village  = document.getElementById('filter-village').value;
+  const service  = document.getElementById('filter-service').value;
   const filtered = orders.filter(o =>
     statuses.includes(o.status) &&
-    (village==='All'||o.village===village) &&
-    (service==='All'||o.service===service)
+    (village === 'All' || o.village === village) &&
+    (service === 'All' || o.service === service)
   );
-  filtered.sort((a,b)=>b.id-a.id).forEach(o => {
-    const d = o.date ? new Date(o.date).toLocaleDateString('en-GB') : 'TBD';
+  filtered.sort((a, b) => b.id - a.id).forEach(o => {
+    const d = o.date ? formatDateNice(o.date) : 'TBD';
     tbody.innerHTML += `<tr>
       <td><strong>${o.name}</strong><br><small style="color:var(--muted)">${o.cars} car(s)</small></td>
       <td>${o.phone}</td>
-      <td>${o.village}<br><small style="color:var(--muted)">${o.address||'-'}</small></td>
+      <td>${o.village}<br><small style="color:var(--muted)">${o.address || '-'}</small></td>
       <td>${o.service}</td>
       <td>${d}</td>
-      <td>${o.time||'TBD'}</td>
+      <td>${o.time || 'TBD'}</td>
       <td>£${parseFloat(o.paid).toFixed(2)}</td>
       <td><span class="badge ${o.status}">${o.status}</span></td>
       <td style="white-space:nowrap;">
@@ -1216,40 +1007,42 @@ function renderOrders() {
   });
 }
 
-// ── COSTS ──────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// COSTS
+// ══════════════════════════════════════════════════════════
 async function saveCost(e) {
   e.preventDefault();
   const id = document.getElementById('c-id').value;
   const cd = {
     id:    id ? parseInt(id) : Date.now(),
     name:  document.getElementById('c-name').value,
-    desc:  document.getElementById('c-desc').value||'',
+    desc:  document.getElementById('c-desc').value || '',
     date:  document.getElementById('c-date').value,
-    cost:  parseFloat(document.getElementById('c-cost').value)||0,
-    litre: parseFloat(document.getElementById('c-litre').value)||null,
-    link:  document.getElementById('c-link').value||'',
-    img:   document.getElementById('c-img').value||''
+    cost:  parseFloat(document.getElementById('c-cost').value) || 0,
+    litre: parseFloat(document.getElementById('c-litre').value) || null,
+    link:  document.getElementById('c-link').value || '',
+    img:   document.getElementById('c-img').value || ''
   };
-  if (id) { const i=costs.findIndex(c=>c.id==id); costs[i]=cd; }
+  if (id) { const i = costs.findIndex(c => c.id == id); costs[i] = cd; }
   else costs.push(cd);
   closeModal('cost-modal');
   renderCosts(); updateDashboardStats();
   showSync('syncing');
-  try { await saveCostToSheets(cd); showSync('ok','Cost saved'); }
-  catch(err) { showSync('error','Save failed'); console.error(err); }
+  try { await saveCostToSheets(cd); showSync('ok', 'Cost saved'); }
+  catch (err) { showSync('error', 'Save failed'); console.error(err); }
 }
 
 function editCost(id) {
-  const c = costs.find(c=>c.id===id); if(!c) return;
-  document.getElementById('c-id').value=c.id;
-  document.getElementById('c-name').value=c.name;
-  document.getElementById('c-desc').value=c.desc||'';
-  document.getElementById('c-date').value=c.date;
-  document.getElementById('c-cost').value=c.cost;
-  document.getElementById('c-litre').value=c.litre||'';
-  document.getElementById('c-link').value=c.link||'';
-  document.getElementById('c-img').value=c.img||'';
-  document.getElementById('cost-modal-title').innerText='Edit Cost';
+  const c = costs.find(c => c.id === id); if (!c) return;
+  document.getElementById('c-id').value    = c.id;
+  document.getElementById('c-name').value  = c.name;
+  document.getElementById('c-desc').value  = c.desc || '';
+  document.getElementById('c-date').value  = c.date;
+  document.getElementById('c-cost').value  = c.cost;
+  document.getElementById('c-litre').value = c.litre || '';
+  document.getElementById('c-link').value  = c.link || '';
+  document.getElementById('c-img').value   = c.img || '';
+  document.getElementById('cost-modal-title').innerText = 'Edit Cost';
   openModal('cost-modal');
 }
 
@@ -1258,24 +1051,24 @@ async function deleteCost(id) {
   costs = costs.filter(c => c.id !== id);
   renderCosts(); updateDashboardStats();
   showSync('syncing');
-  try { await deleteFromSheets('Costs', id); showSync('ok','Cost deleted'); }
-  catch(err) { showSync('error','Delete failed'); console.error(err); }
+  try { await deleteFromSheets('Costs', id); showSync('ok', 'Cost deleted'); }
+  catch (err) { showSync('error', 'Delete failed'); console.error(err); }
 }
 
 function renderCosts() {
   const tbody = document.getElementById('costs-tbody');
   if (!tbody) return;
-  tbody.innerHTML='';
-  [...costs].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(c => {
+  tbody.innerHTML = '';
+  [...costs].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(c => {
     const img = c.img ? `<a href="${c.img}" target="_blank"><img src="${c.img}" class="img-preview"></a>` : '<span style="color:#aaa">None</span>';
     const lnk = c.link ? `<a href="${c.link}" target="_blank">Link</a>` : '-';
-    const d = c.date ? new Date(c.date).toLocaleDateString('en-GB') : '-';
+    const d   = c.date ? formatDateNice(c.date) : '-';
     tbody.innerHTML += `<tr>
       <td><strong>${c.name}</strong></td>
-      <td>${c.desc||'-'}</td>
+      <td>${c.desc || '-'}</td>
       <td>${d}</td>
       <td>£${parseFloat(c.cost).toFixed(2)}</td>
-      <td>${c.litre ? '£'+parseFloat(c.litre).toFixed(2) : '-'}</td>
+      <td>${c.litre ? '£' + parseFloat(c.litre).toFixed(2) : '-'}</td>
       <td>${lnk}</td>
       <td>${img}</td>
       <td style="white-space:nowrap;">
@@ -1286,7 +1079,9 @@ function renderCosts() {
   });
 }
 
-// ── METHODS ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// METHODS
+// ══════════════════════════════════════════════════════════
 async function saveMethodsData() {
   methodsData = {
     way:       document.getElementById('cj-way-text').value,
@@ -1294,67 +1089,75 @@ async function saveMethodsData() {
     resources: document.getElementById('cj-resources-text').value
   };
   showSync('syncing');
-  try { await saveMethodsToSheets(); showSync('ok','Saved'); }
-  catch(e) { showSync('error','Save failed'); }
+  try { await saveMethodsToSheets(); showSync('ok', 'Saved'); }
+  catch (e) { showSync('error', 'Save failed'); }
 }
 
 function loadMethodsData() {
-  document.getElementById('cj-way-text').value = methodsData.way;
-  document.getElementById('cj-method-text').value = methodsData.method;
+  document.getElementById('cj-way-text').value      = methodsData.way;
+  document.getElementById('cj-method-text').value   = methodsData.method;
   document.getElementById('cj-resources-text').value = methodsData.resources;
 }
 
-// ── HELPERS ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// DASHBOARD STATS
+// ══════════════════════════════════════════════════════════
 function inTimeframe(dateStr, filter, yr, mo) {
-  if (filter==='Total') return true;
+  if (filter === 'Total') return true;
   if (!dateStr) return false;
-  const d = new Date(dateStr);
-  if (isNaN(d)) return false;
-  if (filter==='Yearly') return d.getFullYear()===yr;
-  if (filter==='Monthly') return d.getFullYear()===yr && d.getMonth()===mo;
+  const d = cleanDate(dateStr);
+  if (!d) return false;
+  const [y, m] = d.split('-').map(Number);
+  if (filter === 'Yearly')  return y === yr;
+  if (filter === 'Monthly') return y === yr && (m - 1) === mo;
   return true;
 }
 
 function getRange(count) {
-  const now = new Date(); const res = [];
-  for (let i=count-1; i>=0; i--) {
-    let m = now.getMonth()-i, y=now.getFullYear();
-    while(m<0){m+=12;y--;}
-    res.push({month:m,year:y});
+  const now = new Date(), res = [];
+  for (let i = count - 1; i >= 0; i--) {
+    let m = now.getMonth() - i, y = now.getFullYear();
+    while (m < 0) { m += 12; y--; }
+    res.push({ month: m, year: y });
   }
   return res;
 }
 
-// ── DASHBOARD UPDATE ───────────────────────────────────────
+function setText(id, val) {
+  const el = document.getElementById(id); if (el) el.innerText = val;
+}
+
 function updateDashboardStats() {
-  const tf = (document.getElementById('time-filter')||{}).value || 'Yearly';
-  const mc = parseInt((document.getElementById('chart-months')||{}).value||6);
-  const now = new Date(), yr=now.getFullYear(), mo=now.getMonth();
+  const tf  = (document.getElementById('time-filter') || {}).value || 'Yearly';
+  const mc  = parseInt((document.getElementById('chart-months') || {}).value || 6);
+  const now = new Date(), yr = now.getFullYear(), mo = now.getMonth();
 
-  const compOrders = orders.filter(o => o.status==='Completed' && inTimeframe(o.date,tf,yr,mo));
-  const compCosts  = costs.filter(c => inTimeframe(c.date,tf,yr,mo));
+  const compOrders = orders.filter(o => o.status === 'Completed' && inTimeframe(o.date, tf, yr, mo));
+  const compCosts  = costs.filter(c => inTimeframe(c.date, tf, yr, mo));
 
-  const rev  = compOrders.reduce((s,o)=>s+parseFloat(o.paid||0),0);
-  const exp  = compCosts.reduce((s,c)=>s+parseFloat(c.cost||0),0);
-  const prof = rev-exp;
-  const marg = rev>0 ? ((prof/rev)*100).toFixed(1) : 0;
-  const cars = compOrders.reduce((s,o)=>s+parseInt(o.cars||1),0);
-  const avg  = compOrders.length>0 ? (rev/compOrders.length).toFixed(2) : '0.00';
+  const rev  = compOrders.reduce((s, o) => s + parseFloat(o.paid || 0), 0);
+  const exp  = compCosts.reduce((s, c) => s + parseFloat(c.cost || 0), 0);
+  const prof = rev - exp;
+  const marg = rev > 0 ? ((prof / rev) * 100).toFixed(1) : 0;
+  const cars = compOrders.reduce((s, o) => s + parseInt(o.cars || 1), 0);
+  const avg  = compOrders.length > 0 ? (rev / compOrders.length).toFixed(2) : '0.00';
 
-  setText('stat-revenue', `£${rev.toFixed(2)}`);
+  setText('stat-revenue',     `£${rev.toFixed(2)}`);
   setText('stat-revenue-sub', `${compOrders.length} completed`);
-  setText('stat-expenses', `£${exp.toFixed(2)}`);
-  setText('stat-expenses-sub', `${compCosts.length} entries`);
-  const pe=document.getElementById('stat-profit');
-  if(pe){pe.innerText=`£${prof.toFixed(2)}`;pe.style.color=prof<0?'var(--danger)':'var(--primary)';}
-  const me=document.getElementById('stat-margin');
-  if(me){me.innerText=`${marg}% margin`;me.style.color=prof<0?'var(--danger)':'var(--success)';}
-  setText('stat-orders', compOrders.length);
-  setText('stat-cars', cars);
-  setText('stat-avg', `£${avg}`);
+  setText('stat-expenses',    `£${exp.toFixed(2)}`);
+  setText('stat-expenses-sub',`${compCosts.length} entries`);
 
-  ['Confirmation','Confirmed','Completed','Postponed','Cancelled'].forEach(s=>{
-    setText('pipe-'+s.toLowerCase(), orders.filter(o=>o.status===s).length);
+  const pe = document.getElementById('stat-profit');
+  if (pe) { pe.innerText = `£${prof.toFixed(2)}`; pe.style.color = prof < 0 ? 'var(--danger)' : 'var(--primary)'; }
+  const me = document.getElementById('stat-margin');
+  if (me) { me.innerText = `${marg}% margin`; me.style.color = prof < 0 ? 'var(--danger)' : 'var(--success)'; }
+
+  setText('stat-orders', compOrders.length);
+  setText('stat-cars',   cars);
+  setText('stat-avg',    `£${avg}`);
+
+  ['Confirmation','Confirmed','Completed','Postponed','Cancelled'].forEach(s => {
+    setText('pipe-' + s.toLowerCase(), orders.filter(o => o.status === s).length);
   });
   setText('pipe-total', orders.length);
 
@@ -1368,130 +1171,109 @@ function updateDashboardStats() {
   renderMonthlyTable();
 }
 
-function setText(id, val) {
-  const el=document.getElementById(id); if(el) el.innerText=val;
-}
-
-// ── BAR CHART (FIXED) ──────────────────────────────────────
-// Key fix: use pixel heights based on container's clientHeight
+// ══════════════════════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════════════════════
 function renderBarChart(monthCount) {
   const el = document.getElementById('bar-chart');
   if (!el) return;
-  const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MO    = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const range = getRange(monthCount);
-  const data = range.map(({month,year}) => {
+  const data  = range.map(({ month, year }) => {
     const val = orders
-      .filter(o=>o.status==='Completed'&&o.date)
-      .filter(o=>{ const d=new Date(o.date); return d.getMonth()===month&&d.getFullYear()===year; })
-      .reduce((s,o)=>s+parseFloat(o.paid||0),0);
-    return {label:MO[month],val};
+      .filter(o => o.status === 'Completed' && o.date)
+      .filter(o => { const d = new Date(cleanDate(o.date)); return d.getMonth() === month && d.getFullYear() === year; })
+      .reduce((s, o) => s + parseFloat(o.paid || 0), 0);
+    return { label: MO[month], val };
   });
-
-  const maxVal = Math.max(...data.map(d=>d.val), 1);
-  // Label area at bottom — approximate height used for label
-  const LABEL_H = 26; // px reserved for label below bar
-
-  // Build HTML first so the container exists, then set heights
-  el.innerHTML = data.map((d,i) => {
-    const valLabel = d.val > 0 ? '£'+Math.round(d.val) : '';
-    return `<div class="bar-wrapper" id="bw-${i}">
+  const maxVal  = Math.max(...data.map(d => d.val), 1);
+  const LABEL_H = 26;
+  el.innerHTML  = data.map((d, i) => `
+    <div class="bar-wrapper" id="bw-${i}">
       <div class="bar-inner">
-        <div class="bar-val" id="bv-${i}">${valLabel}</div>
+        <div class="bar-val" id="bv-${i}">${d.val > 0 ? '£' + Math.round(d.val) : ''}</div>
         <div class="bar" id="bar-${i}" style="background:linear-gradient(180deg,var(--primary2),var(--primary));height:2px;"></div>
       </div>
       <div class="bar-label">${d.label}</div>
-    </div>`;
-  }).join('');
-
-  // After render, set pixel heights
+    </div>`).join('');
   requestAnimationFrame(() => {
     const containerH = el.clientHeight - LABEL_H;
     data.forEach((d, i) => {
-      const barEl = document.getElementById('bar-'+i);
+      const barEl = document.getElementById('bar-' + i);
       if (!barEl) return;
-      const pct = d.val / maxVal;
-      const h = d.val > 0 ? Math.max(Math.round(pct * containerH), 4) : 2;
+      const h = d.val > 0 ? Math.max(Math.round((d.val / maxVal) * containerH), 4) : 2;
       barEl.style.height = h + 'px';
     });
   });
 }
 
-// ── COMPARE CHART (FIXED) ──────────────────────────────────
 function renderCompareChart(monthCount) {
   const el = document.getElementById('compare-chart');
   if (!el) return;
-  const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MO    = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const range = getRange(monthCount);
-  const data = range.map(({month,year}) => {
-    const rev = orders.filter(o=>o.status==='Completed'&&o.date)
-      .filter(o=>{ const d=new Date(o.date); return d.getMonth()===month&&d.getFullYear()===year; })
-      .reduce((s,o)=>s+parseFloat(o.paid||0),0);
-    const exp = costs.filter(c=>c.date)
-      .filter(c=>{ const d=new Date(c.date); return d.getMonth()===month&&d.getFullYear()===year; })
-      .reduce((s,c)=>s+parseFloat(c.cost||0),0);
-    return {label:MO[month],rev,exp};
+  const data  = range.map(({ month, year }) => {
+    const rev = orders.filter(o => o.status === 'Completed' && o.date)
+      .filter(o => { const d = new Date(cleanDate(o.date)); return d.getMonth() === month && d.getFullYear() === year; })
+      .reduce((s, o) => s + parseFloat(o.paid || 0), 0);
+    const exp = costs.filter(c => c.date)
+      .filter(c => { const d = new Date(cleanDate(c.date)); return d.getMonth() === month && d.getFullYear() === year; })
+      .reduce((s, c) => s + parseFloat(c.cost || 0), 0);
+    return { label: MO[month], rev, exp };
   });
-
-  const maxVal = Math.max(...data.flatMap(d=>[d.rev,d.exp]), 1);
+  const maxVal  = Math.max(...data.flatMap(d => [d.rev, d.exp]), 1);
   const LABEL_H = 26;
-
-  el.innerHTML = data.map((d,i) => {
-    return `<div class="bar-wrapper" title="Rev: £${d.rev.toFixed(2)} | Exp: £${d.exp.toFixed(2)}">
+  el.innerHTML  = data.map((d, i) => `
+    <div class="bar-wrapper" title="Rev: £${d.rev.toFixed(2)} | Exp: £${d.exp.toFixed(2)}">
       <div class="bar-inner" style="flex-direction:row;gap:3px;align-items:flex-end;width:100%;padding:0 6px;">
-        <div id="cbar-r-${i}" style="flex:1;background:var(--success);border-radius:4px 4px 0 0;opacity:0.85;height:2px;min-height:0;"></div>
-        <div id="cbar-e-${i}" style="flex:1;background:var(--danger);border-radius:4px 4px 0 0;opacity:0.75;height:2px;min-height:0;"></div>
+        <div id="cbar-r-${i}" style="flex:1;background:var(--success);border-radius:4px 4px 0 0;opacity:0.85;height:2px;"></div>
+        <div id="cbar-e-${i}" style="flex:1;background:var(--danger);border-radius:4px 4px 0 0;opacity:0.75;height:2px;"></div>
       </div>
       <div class="bar-label">${d.label}</div>
-    </div>`;
-  }).join('');
-
+    </div>`).join('');
   requestAnimationFrame(() => {
     const containerH = el.clientHeight - LABEL_H;
     data.forEach((d, i) => {
-      const rEl = document.getElementById('cbar-r-'+i);
-      const eEl = document.getElementById('cbar-e-'+i);
+      const rEl = document.getElementById('cbar-r-' + i);
+      const eEl = document.getElementById('cbar-e-' + i);
       if (!rEl || !eEl) return;
-      const rH = d.rev > 0 ? Math.max(Math.round((d.rev / maxVal) * containerH), 4) : 2;
-      const eH = d.exp > 0 ? Math.max(Math.round((d.exp / maxVal) * containerH), 4) : 2;
-      rEl.style.height = rH + 'px';
-      eEl.style.height = eH + 'px';
+      rEl.style.height = (d.rev > 0 ? Math.max(Math.round((d.rev / maxVal) * containerH), 4) : 2) + 'px';
+      eEl.style.height = (d.exp > 0 ? Math.max(Math.round((d.exp / maxVal) * containerH), 4) : 2) + 'px';
     });
   });
 }
 
-// ── BREAKDOWN CHARTS ───────────────────────────────────────
-function renderServiceBreakdown(tf) {
-  const el=document.getElementById('service-breakdown'); if(!el) return;
-  const now=new Date();
-  const src=orders.filter(o=>inTimeframe(o.date,tf,now.getFullYear(),now.getMonth()));
-  renderBreakdown(el, src.map(o=>o.service), ['var(--primary)','var(--success)','var(--accent)','var(--danger)','var(--primary2)']);
-}
-
-function renderVillageBreakdown(tf) {
-  const el=document.getElementById('village-breakdown'); if(!el) return;
-  const now=new Date();
-  const src=orders.filter(o=>inTimeframe(o.date,tf,now.getFullYear(),now.getMonth()));
-  renderBreakdown(el, src.map(o=>o.village), ['var(--primary2)','var(--accent)','var(--success)','var(--primary)','var(--danger)']);
-}
-
 function renderBreakdown(el, values, colors) {
-  const counts={};
-  values.forEach(v=>{ counts[v]=(counts[v]||0)+1; });
-  const total=values.length||1;
-  el.innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,n],i)=>{
-    const pct=Math.round((n/total)*100);
+  const counts = {};
+  values.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+  const total = values.length || 1;
+  el.innerHTML = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n], i) => {
+    const pct = Math.round((n / total) * 100);
     return `<div class="prog-row">
-      <div class="prog-label"><span>${k||'Unknown'}</span><span>${n} (${pct}%)</span></div>
-      <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${colors[i%colors.length]};"></div></div>
+      <div class="prog-label"><span>${k || 'Unknown'}</span><span>${n} (${pct}%)</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${colors[i % colors.length]};"></div></div>
     </div>`;
   }).join('') || '<p style="color:var(--muted);font-size:13px;">No data</p>';
 }
 
-// ── FEED LISTS ─────────────────────────────────────────────
+function renderServiceBreakdown(tf) {
+  const el = document.getElementById('service-breakdown'); if (!el) return;
+  const now = new Date();
+  const src = orders.filter(o => inTimeframe(o.date, tf, now.getFullYear(), now.getMonth()));
+  renderBreakdown(el, src.map(o => o.service), ['var(--primary)','var(--success)','var(--accent)','var(--danger)','var(--primary2)']);
+}
+
+function renderVillageBreakdown(tf) {
+  const el = document.getElementById('village-breakdown'); if (!el) return;
+  const now = new Date();
+  const src = orders.filter(o => inTimeframe(o.date, tf, now.getFullYear(), now.getMonth()));
+  renderBreakdown(el, src.map(o => o.village), ['var(--primary2)','var(--accent)','var(--success)','var(--primary)','var(--danger)']);
+}
+
 function renderRecentOrders() {
-  const el=document.getElementById('recent-orders-list'); if(!el) return;
-  const recent=[...orders].sort((a,b)=>b.id-a.id).slice(0,6);
-  el.innerHTML = recent.map(o=>`
+  const el = document.getElementById('recent-orders-list'); if (!el) return;
+  const recent = [...orders].sort((a, b) => b.id - a.id).slice(0, 6);
+  el.innerHTML = recent.map(o => `
     <div class="feed-row">
       <div><div class="name">${o.name}</div><div class="sub">${o.village} · ${o.service}</div></div>
       <div style="text-align:right;">
@@ -1502,39 +1284,45 @@ function renderRecentOrders() {
 }
 
 function renderTopCosts(tf) {
-  const el=document.getElementById('top-costs-list'); if(!el) return;
-  const now=new Date();
-  const top=[...costs].filter(c=>inTimeframe(c.date,tf,now.getFullYear(),now.getMonth()))
-    .sort((a,b)=>parseFloat(b.cost)-parseFloat(a.cost)).slice(0,6);
-  el.innerHTML = top.map(c=>`
+  const el = document.getElementById('top-costs-list'); if (!el) return;
+  const now = new Date();
+  const top = [...costs]
+    .filter(c => inTimeframe(c.date, tf, now.getFullYear(), now.getMonth()))
+    .sort((a, b) => parseFloat(b.cost) - parseFloat(a.cost)).slice(0, 6);
+  el.innerHTML = top.map(c => `
     <div class="feed-row">
-      <div><div class="name">${c.name}</div><div class="sub">${c.date?new Date(c.date).toLocaleDateString('en-GB'):'-'}</div></div>
+      <div><div class="name">${c.name}</div><div class="sub">${c.date ? formatDateNice(c.date) : '-'}</div></div>
       <div style="font-size:14px;font-weight:700;color:var(--danger);">£${parseFloat(c.cost).toFixed(2)}</div>
     </div>`).join('') || '<p style="color:var(--muted);font-size:13px;">No expenses</p>';
 }
 
 function renderMonthlyTable() {
-  const el=document.getElementById('monthly-table'); if(!el) return;
-  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const rows=getRange(6).map(({month,year})=>{
-    const rev=orders.filter(o=>o.status==='Completed'&&o.date).filter(o=>{const d=new Date(o.date);return d.getMonth()===month&&d.getFullYear()===year;}).reduce((s,o)=>s+parseFloat(o.paid||0),0);
-    const exp=costs.filter(c=>c.date).filter(c=>{const d=new Date(c.date);return d.getMonth()===month&&d.getFullYear()===year;}).reduce((s,c)=>s+parseFloat(c.cost||0),0);
-    const cnt=orders.filter(o=>o.status==='Completed'&&o.date).filter(o=>{const d=new Date(o.date);return d.getMonth()===month&&d.getFullYear()===year;}).length;
-    return {lbl:`${MO[month]} ${year}`,rev,exp,prof:rev-exp,cnt};
+  const el  = document.getElementById('monthly-table'); if (!el) return;
+  const MO  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const rows = getRange(6).map(({ month, year }) => {
+    const rev = orders.filter(o => o.status === 'Completed' && o.date)
+      .filter(o => { const d = new Date(cleanDate(o.date)); return d.getMonth() === month && d.getFullYear() === year; })
+      .reduce((s, o) => s + parseFloat(o.paid || 0), 0);
+    const exp = costs.filter(c => c.date)
+      .filter(c => { const d = new Date(cleanDate(c.date)); return d.getMonth() === month && d.getFullYear() === year; })
+      .reduce((s, c) => s + parseFloat(c.cost || 0), 0);
+    const cnt = orders.filter(o => o.status === 'Completed' && o.date)
+      .filter(o => { const d = new Date(cleanDate(o.date)); return d.getMonth() === month && d.getFullYear() === year; }).length;
+    return { lbl: `${MO[month]} ${year}`, rev, exp, prof: rev - exp, cnt };
   });
-  el.innerHTML=`<table style="width:100%;font-size:12px;border-collapse:collapse;min-width:0;">
+  el.innerHTML = `<table style="width:100%;font-size:12px;border-collapse:collapse;min-width:0;">
     <thead><tr style="border-bottom:2px solid rgba(0,0,0,0.08);">
-      <th style="padding:6px 6px;text-align:left;color:var(--muted);font-weight:700;font-size:11px;">Month</th>
+      <th style="padding:6px;text-align:left;color:var(--muted);font-weight:700;font-size:11px;">Month</th>
       <th style="padding:6px 4px;text-align:right;color:var(--muted);font-weight:700;font-size:11px;">Rev</th>
       <th style="padding:6px 4px;text-align:right;color:var(--muted);font-weight:700;font-size:11px;">Exp</th>
       <th style="padding:6px 4px;text-align:right;color:var(--muted);font-weight:700;font-size:11px;">Prof</th>
       <th style="padding:6px 4px;text-align:right;color:var(--muted);font-weight:700;font-size:11px;">#</th>
     </tr></thead>
-    <tbody>${rows.map(r=>`<tr style="border-bottom:1px solid rgba(0,0,0,0.04);">
-      <td style="padding:6px 6px;font-weight:600;font-size:11px;">${r.lbl}</td>
+    <tbody>${rows.map(r => `<tr style="border-bottom:1px solid rgba(0,0,0,0.04);">
+      <td style="padding:6px;font-weight:600;font-size:11px;">${r.lbl}</td>
       <td style="padding:6px 4px;text-align:right;color:var(--success);font-size:11px;">£${r.rev.toFixed(0)}</td>
       <td style="padding:6px 4px;text-align:right;color:var(--danger);font-size:11px;">£${r.exp.toFixed(0)}</td>
-      <td style="padding:6px 4px;text-align:right;font-weight:700;color:${r.prof<0?'var(--danger)':'var(--primary)'};font-size:11px;">£${r.prof.toFixed(0)}</td>
+      <td style="padding:6px 4px;text-align:right;font-weight:700;color:${r.prof < 0 ? 'var(--danger)' : 'var(--primary)'};font-size:11px;">£${r.prof.toFixed(0)}</td>
       <td style="padding:6px 4px;text-align:right;font-size:11px;">${r.cnt}</td>
     </tr>`).join('')}</tbody>
   </table>`;
